@@ -2,14 +2,15 @@
 
 const http = require('node:http');
 const fs = require('node:fs');
+const os = require('node:os');
 const path = require('node:path');
 const { URL } = require('node:url');
 const { loadCatalog } = require('./catalog');
 const { summarizeTranscriptSteps, listBrainConversations } = require('./transcript-parser');
 
-const DEFAULT_PORT = 4317;
+const DEFAULT_PORT = Number(process.env.AGY_MONITOR_PORT) || 4317;
 const DEFAULT_HOST = '127.0.0.1';
-const DEFAULT_BRAIN_ROOT = 'C:\\Users\\roger\\.gemini\\antigravity\\brain';
+const DEFAULT_BRAIN_ROOT = process.env.AGY_BRAIN_ROOT || path.join(os.homedir(), '.gemini', 'antigravity', 'brain');
 const PUBLIC_DIR = path.join(__dirname, '..', 'public');
 
 const MIME_TYPES = Object.freeze({
@@ -138,5 +139,6 @@ module.exports = {
   buildLiveState,
   createMonitorServer,
   DEFAULT_HOST,
-  DEFAULT_PORT
+  DEFAULT_PORT,
+  DEFAULT_BRAIN_ROOT
 };

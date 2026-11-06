@@ -82,7 +82,7 @@
       "ownership": "managed",
       "scaffoldOnly": false,
       "contentTransform": "antigravity-rule-frontmatter",
-      "contentSha256": "651bfa5dc6cdcb5d5b05bb0352b1e6cc178dd0a9e11ada66e5aa4bc733ad58e9"
+      "contentSha256": "c09f88b720542f37f8283523573b74a98f7aeaffc6e74c61c1837d28f00418d1"
     },
     {
       "kind": "copy-file",
@@ -483,7 +483,7 @@
       "ownership": "managed",
       "scaffoldOnly": false,
       "contentTransform": null,
-      "contentSha256": "35aa0ea509f4fabc4c8810f55edcac0b019bd556e9a343e0420353a9e4fd58d9"
+      "contentSha256": "fcf6edbcec458bac04c35bed764b04140342b2f45d0d7858b25bd07ca0b49c16"
     }
   ]
 }

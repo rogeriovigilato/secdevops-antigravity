@@ -3,8 +3,24 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const DEFAULT_PRELOADED_ROOT = 'E:\\antigravity-kit\\global-profile\\.agents';
-const DEFAULT_CATALOG_ROOT = 'E:\\antigravity-kit\\secdevops-antigravity';
+const FALLBACK_PRELOADED_ROOT = 'E:\\antigravity-kit\\global-profile\\.agents';
+const FALLBACK_CATALOG_ROOT = 'E:\\antigravity-kit\\secdevops-antigravity';
+
+function resolveDefaultPreloadedRoot() {
+  if (process.env.AGY_PRELOADED_ROOT) return process.env.AGY_PRELOADED_ROOT;
+  const repoAgents = path.resolve(__dirname, '..', '..', '.agents');
+  if (fs.existsSync(path.join(repoAgents, 'skills'))) return repoAgents;
+  return FALLBACK_PRELOADED_ROOT;
+}
+
+function resolveDefaultCatalogRoot() {
+  if (process.env.AGY_CATALOG_ROOT) return process.env.AGY_CATALOG_ROOT;
+  const repoRoot = path.resolve(__dirname, '..', '..');
+  if (fs.existsSync(path.join(repoRoot, 'skills')) && fs.existsSync(path.join(repoRoot, 'agents'))) {
+    return repoRoot;
+  }
+  return FALLBACK_CATALOG_ROOT;
+}
 
 function readDirSubfolders(dirPath) {
   try {
@@ -31,8 +47,8 @@ function readMarkdownBasenames(dirPath) {
 }
 
 function loadCatalog(options = {}) {
-  const preloadedRoot = options.preloadedRoot || DEFAULT_PRELOADED_ROOT;
-  const catalogRoot = options.catalogRoot || DEFAULT_CATALOG_ROOT;
+  const preloadedRoot = options.preloadedRoot || resolveDefaultPreloadedRoot();
+  const catalogRoot = options.catalogRoot || resolveDefaultCatalogRoot();
 
   const ring1Agents = readMarkdownBasenames(path.join(preloadedRoot, 'agents'));
   const ring2Skills = readDirSubfolders(path.join(preloadedRoot, 'skills'));
@@ -61,6 +77,8 @@ function loadCatalog(options = {}) {
 
 module.exports = {
   loadCatalog,
+  resolveDefaultPreloadedRoot,
+  resolveDefaultCatalogRoot,
   readDirSubfolders,
   readMarkdownBasenames
 };

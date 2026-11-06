@@ -333,8 +333,47 @@ function createInstallState(options) {
   return state;
 }
 
+function rebaseClonedInstallState(state, filePath) {
+  if (!state || !state.target || !filePath) return state;
+  const resolvedStatePath = path.resolve(filePath);
+  const actualTargetRoot = path.dirname(resolvedStatePath);
+  const recordedRoot = state.target.root;
+  if (!recordedRoot || recordedRoot === actualTargetRoot) return state;
+
+  const actualRepoRoot = path.dirname(actualTargetRoot);
+  const normRecordedRoot = recordedRoot.replace(/\\/g, '/').replace(/\/+$/, '');
+
+  const rebasedOps = Array.isArray(state.operations)
+    ? state.operations.map(op => {
+        const nextOp = { ...op };
+        if (typeof nextOp.destinationPath === 'string') {
+          const normDest = nextOp.destinationPath.replace(/\\/g, '/');
+          if (normDest.startsWith(normRecordedRoot + '/')) {
+            const relDest = normDest.slice(normRecordedRoot.length + 1);
+            nextOp.destinationPath = path.join(actualTargetRoot, ...relDest.split('/'));
+          }
+        }
+        if (typeof nextOp.sourceRelativePath === 'string' && nextOp.sourceRelativePath.length > 0) {
+          nextOp.sourcePath = path.join(actualRepoRoot, ...nextOp.sourceRelativePath.replace(/\\/g, '/').split('/'));
+        }
+        return nextOp;
+      })
+    : state.operations;
+
+  return {
+    ...state,
+    target: {
+      ...state.target,
+      root: actualTargetRoot,
+      installStatePath: resolvedStatePath,
+    },
+    operations: rebasedOps,
+  };
+}
+
 function readInstallState(filePath) {
-  const state = readJson(filePath, 'install-state');
+  const rawState = readJson(filePath, 'install-state');
+  const state = rebaseClonedInstallState(rawState, filePath);
   assertValidInstallState(state, filePath);
   return state;
 }

@@ -1,5 +1,5 @@
 @echo off
-set PATH=E:\nodejs;%PATH%
-cd /d E:\antigravity-kit\token-monitor
+if exist "E:\nodejs\node.exe" set "PATH=E:\nodejs;%PATH%"
+cd /d "%~dp0"
 start "" "http://127.0.0.1:4317"
-E:\nodejs\node.exe src\server.js
+node src\server.js

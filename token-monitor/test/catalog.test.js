@@ -2,13 +2,13 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { loadCatalog } = require('../src/catalog');
+const os = require('node:os');
+const path = require('node:path');
+const { loadCatalog, resolveDefaultPreloadedRoot, resolveDefaultCatalogRoot } = require('../src/catalog');
+const { DEFAULT_BRAIN_ROOT } = require('../src/server');
 
 test('loadCatalog loads preloaded and on-demand rings without overlap', () => {
-  const catalog = loadCatalog({
-    preloadedRoot: 'E:\\antigravity-kit\\global-profile\\.agents',
-    catalogRoot: 'E:\\antigravity-kit\\secdevops-antigravity'
-  });
+  const catalog = loadCatalog();
 
   assert.ok(Array.isArray(catalog.ring1Agents));
   assert.ok(Array.isArray(catalog.ring2Skills));
@@ -27,4 +27,10 @@ test('loadCatalog loads preloaded and on-demand rings without overlap', () => {
   // Ensure no preloaded agent is duplicated in on-demand ring 3
   const overlapAgents = catalog.ring3AgentsOD.filter(a => catalog.ring1Agents.includes(a));
   assert.deepEqual(overlapAgents, []);
+});
+
+test('portable defaults resolve relative to repo root and os.homedir() instead of hardcoded username or E: drive', () => {
+  assert.ok(resolveDefaultPreloadedRoot().endsWith('.agents'));
+  assert.ok(DEFAULT_BRAIN_ROOT.startsWith(os.homedir()) || Boolean(process.env.AGY_BRAIN_ROOT));
+  assert.ok(path.isAbsolute(resolveDefaultCatalogRoot()));
 });

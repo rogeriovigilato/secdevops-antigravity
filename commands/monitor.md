@@ -4,7 +4,7 @@ description: Start, open, or check the Antigravity Galaxy Mind & Token Radar (/m
 
 # Monitor Command (`/monitor`)
 
-Launch or inspect the **Antigravity Galaxy Mind & Token Radar** (`E:\antigravity-kit\token-monitor`) on `http://127.0.0.1:4317` without manually opening folders or executables.
+Launch or inspect the **Antigravity Galaxy Mind & Token Radar** on `http://127.0.0.1:4317` without manually opening folders or executables.
 
 ## Usage
 
@@ -20,17 +20,22 @@ Launch or inspect the **Antigravity Galaxy Mind & Token Radar** (`E:\antigravity
 
 ### 1. For `/monitor`, `/monitor start`, or `/monitor popup`
 
-1. First, check if the server is already running with `E:\nodejs\node.exe E:\antigravity-kit\token-monitor\src\cli.js status`.
-2. If `running` is `false`, launch the server using `run_command` with **`IsDaemon: true`** (`WaitMsBeforeAsync: 1500`) so Antigravity keeps the background process alive across turns:
+1. Resolve the portable `node` binary (`node` in `PATH`, or `E:\nodejs\node.exe` if present) and the `token-monitor` directory (`./token-monitor` in the workspace root, or `E:\antigravity-kit\token-monitor` fallback).
+2. Check if the server is already running with `node <token-monitor>/src/cli.js status`.
+3. If `running` is `false`, launch the server using `run_command` with **`IsDaemon: true`** (`WaitMsBeforeAsync: 1500`) so Antigravity keeps the background process alive across turns:
 
 ```powershell
-E:\nodejs\node.exe E:\antigravity-kit\token-monitor\src\server.js
+$node = if (Get-Command node -ErrorAction SilentlyContinue) { 'node' } else { 'E:\nodejs\node.exe' }
+$dir  = if (Test-Path '.\token-monitor\src\server.js') { '.\token-monitor' } else { 'E:\antigravity-kit\token-monitor' }
+& $node "$dir\src\server.js"
 ```
 
-3. Open the browser tab (or popup window) using:
+4. Open the browser tab (or popup window) using:
 
 ```powershell
-E:\nodejs\node.exe E:\antigravity-kit\token-monitor\src\cli.js start
+$node = if (Get-Command node -ErrorAction SilentlyContinue) { 'node' } else { 'E:\nodejs\node.exe' }
+$dir  = if (Test-Path '.\token-monitor\src\cli.js') { '.\token-monitor' } else { 'E:\antigravity-kit\token-monitor' }
+& $node "$dir\src\cli.js" start
 ```
 *(If the user requested `/monitor popup`, pass `popup` instead of `start`.)*
 
@@ -39,8 +44,9 @@ E:\nodejs\node.exe E:\antigravity-kit\token-monitor\src\cli.js start
 Run:
 
 ```powershell
-$env:Path='E:\nodejs;'+$env:Path
-E:\nodejs\node.exe E:\antigravity-kit\token-monitor\src\cli.js status
+$node = if (Get-Command node -ErrorAction SilentlyContinue) { 'node' } else { 'E:\nodejs\node.exe' }
+$dir  = if (Test-Path '.\token-monitor\src\cli.js') { '.\token-monitor' } else { 'E:\antigravity-kit\token-monitor' }
+& $node "$dir\src\cli.js" status
 ```
 
 Report the returned status (`running`, `url`, `stepCount`, `latestInputTokens`, `latestCacheTokens`, `totalOutputTokens`) concisely to the user.
