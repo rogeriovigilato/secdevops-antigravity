@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Antigravity Galaxy Mind &amp; Token Radar</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    body {
+      background-color: #05070f;
+      color: #f1f5f9;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    /* Custom thin dark scrollbar for thought box */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b0f1d;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="bg-[#05070f] text-slate-100 antialiased p-4 select-none">
+  <div class="max-w-7xl mx-auto space-y-3.5">
+    <!-- Top Control Bar -->
+    <div class="bg-[#0b0f1d] border border-slate-800 rounded-xl p-3.5 flex flex-wrap items-center justify-between gap-3 shadow-lg">
+      <div class="flex items-center gap-3 flex-wrap">
+        <span class="w-3 h-3 rounded-full bg-cyan-400 animate-ping"></span>
+        <div>
+          <h1 id="t_title" class="text-base font-bold text-white">Radar Galáctico Antigravity — Mente &amp; Tokens</h1>
+          <p id="t_subtitle" class="text-xs text-slate-400">Telemetria em tempo real: onde o agente procura, o que está pensando e pulso de tokens</p>
+        </div>
+
+        <!-- Conversation Selector + Instant Refresh Button -->
+        <div class="flex items-center gap-1.5">
+          <select id="selConv" onchange="onSelectConversation(this.value)" class="bg-[#11172b] border border-slate-700 text-xs rounded-lg px-2.5 py-1.5 font-mono text-cyan-300">
+          </select>
+          <button id="btnRefreshConv" onclick="refreshConversations()" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-400/50 hover:bg-cyan-500/30 transition cursor-pointer">
+            🔄 Atualizar Chats
+          </button>
+        </div>
+      </div>
+
+      <!-- Filters: Language (PT/EN), On-Demand Toggle, Step Walk, Corner Popup -->
+      <div class="flex items-center gap-2 flex-wrap">
+        <!-- Language Filter -->
+        <div class="inline-flex rounded-lg border border-slate-700 bg-[#11172b] p-0.5 text-xs font-semibold">
+          <button id="btnLangPt" onclick="setLanguage('pt')" class="px-2.5 py-1 rounded-md bg-indigo-600 text-white transition">PT-BR</button>
+          <button id="btnLangEn" onclick="setLanguage('en')" class="px-2.5 py-1 rounded-md text-slate-400 hover:text-white transition">EN</button>
+        </div>
+
+        <!-- On-Demand Filter -->
+        <button id="btnToggleOD" onclick="toggleOnDemand()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-400/50 hover:bg-amber-500/30 transition">
+          🌌 Mostrar Sob Demanda: SIM (4 Anéis)
+        </button>
+
+        <!-- Auto-Walk & Prev/Next Step -->
+        <button id="btnAuto" onclick="toggleAutoWalk()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 text-white hover:bg-emerald-500 transition">
+          ⏸ Auto-Passo
+        </button>
+        <button id="btnPrev" onclick="stepBackward()" class="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-800 border border-slate-700 text-slate-200 hover:bg-slate-700 transition">
+          ⏮ Anterior
+        </button>
+        <button id="btnNext" onclick="stepForward()" class="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-indigo-600 text-white hover:bg-indigo-500 transition">
+          ⏭ Próximo
+        </button>
+
+        <!-- Native Always-on-Top Picture-in-Picture / Corner Popup -->
+        <button id="btnPopup" onclick="openCornerPopup()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-purple-600 text-white hover:bg-purple-500 transition">
+          📌 Popup no Canto (PiP)
+        </button>
+      </div>
+    </div>
+
+    <!-- Top 4 Telemetry Cards -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+      <div class="bg-[#0b0f1d] border border-cyan-500/40 rounded-xl p-3">
+        <div id="t_cardSkill" class="text-slate-400">⚡ Skill Conectada ao Núcleo</div>
+        <div id="valSkill" class="text-sm font-bold text-cyan-400 truncate mt-0.5">unified-memory</div>
+        <div id="valSkillLayer" class="text-emerald-400 mt-0.5">● Anel 2: Pré-carregada (1/15)</div>
+      </div>
+      <div class="bg-[#0b0f1d] border border-purple-500/40 rounded-xl p-3">
+        <div id="t_cardAgent" class="text-slate-400">🤖 Subagent Conectado</div>
+        <div id="valAgent" class="text-sm font-bold text-purple-400 truncate mt-0.5">planner</div>
+        <div id="valAgentLayer" class="text-purple-300 mt-0.5">● Anel 1: Pré-carregado (1/11)</div>
+      </div>
+      <div class="bg-[#0b0f1d] border border-indigo-500/40 rounded-xl p-3">
+        <div id="t_cardTool" class="text-slate-400">🔧 Ferramenta &amp; Arquivo Alvo</div>
+        <div id="valTool" class="text-sm font-bold text-indigo-400 truncate mt-0.5">read_file</div>
+        <div id="valTarget" class="font-mono text-slate-300 truncate mt-0.5">context/00-STATE.md</div>
+      </div>
+      <div class="bg-[#0b0f1d] border border-amber-500/40 rounded-xl p-3">
+        <div id="t_cardTokens" class="text-slate-400">🪙 Pulso de Tokens &amp; Contexto</div>
+        <div id="valTokens" class="text-sm font-bold text-amber-400 mt-0.5">14.447 tokens</div>
+        <div id="valCacheCtx" class="text-emerald-400 mt-0.5">Reuso de Cache: 86% · Contexto: 7%</div>
+      </div>
+    </div>
+
+    <!-- Main Content: Galaxy Orbit (8 cols) + Mind Stream & Peaks (4 cols) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+      <!-- Galaxy Canvas -->
+      <div class="lg:col-span-8 bg-[#070a14] border border-slate-800 rounded-xl p-3 space-y-2">
+        <div class="flex flex-wrap items-center justify-between gap-2 px-1 text-xs">
+          <div class="flex flex-wrap items-center gap-3 text-slate-300">
+            <span><span class="inline-block w-2.5 h-2.5 rounded-full bg-purple-400 mr-1"></span><span id="t_ring1">Anel 1: 11 Agents</span></span>
+            <span><span class="inline-block w-2.5 h-2.5 rounded-full bg-cyan-400 mr-1"></span><span id="t_ring2">Anel 2: 15 Skills</span></span>
+            <span id="legRing3"><span class="inline-block w-2.5 h-2.5 rounded-full bg-pink-400 mr-1"></span><span id="t_ring3">Anel 3: 19 Agents OD</span></span>
+            <span id="legRing4"><span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-400 mr-1"></span><span id="t_ring4">Anel 4: 67 Skills OD</span></span>
+          </div>
+          <span id="hoverBadge" class="px-2.5 py-0.5 rounded bg-slate-900 border border-slate-700 text-cyan-300 font-mono">
+            🖱️ Passe o mouse ou clique em qualquer bolinha!
+          </span>
+        </div>
+
+        <canvas id="galaxyCanvas" width="780" height="450" class="w-full h-[430px] rounded-lg cursor-crosshair"></canvas>
+      </div>
+
+      <!-- Right Side: Thinking + Token Peaks + Preloaded Chips -->
+      <div class="lg:col-span-4 space-y-3">
+        <!-- Thinking Stream -->
+        <div class="bg-[#0b0f1d] border border-slate-800 rounded-xl p-3.5">
+          <div class="flex items-center justify-between mb-1.5">
+            <span id="t_thoughtTitle" class="text-xs font-semibold uppercase tracking-wider text-purple-400">🧠 O que o Agente está pensando</span>
+            <span id="stepBadge" class="text-xs px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300">Passo #1</span>
+          </div>
+          <p id="thoughtBox" class="text-xs leading-relaxed bg-[#11172b] p-3 rounded-lg border border-slate-800 text-slate-200 max-h-28 overflow-y-auto">
+            Carregando telemetria...
+          </p>
+        </div>
+
+        <!-- Token Peaks per Step (Fixed layout, sliding window, crystal clear legend and summary) -->
+        <div class="bg-[#0b0f1d] border border-slate-800 rounded-xl p-3.5">
+          <div class="flex items-center justify-between gap-2 text-xs">
+            <span id="t_peaksTitle" class="font-semibold text-amber-400">📊 Consumo de Tokens por Passo</span>
+            <span id="peaksRangeBadge" class="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300">#1–#6</span>
+          </div>
+          <p id="t_peaksSubtitle" class="text-[11px] text-slate-400 mt-0.5 mb-2.5">
+            Altura = tokens novos no passo (+In/Out) · Clique numa barra para inspecionar
+          </p>
+          <div id="peaksChart" class="grid grid-cols-6 gap-2 items-end pt-1 px-1"></div>
+          <div id="peaksStepSummary" class="mt-2.5 pt-2 border-t border-slate-800/80 text-[11px] font-mono text-slate-300 flex items-center justify-between gap-2"></div>
+        </div>
+
+        <!-- Preloaded Agents Matrix -->
+        <div class="bg-[#0b0f1d] border border-slate-800 rounded-xl p-3">
+          <div id="t_preloadedAgentsTitle" class="text-xs font-semibold mb-1.5 text-slate-200">🤖 Agents Pré-Carregados (.agents/agents)</div>
+          <div id="agentsChips" class="flex flex-wrap gap-1"></div>
+        </div>
+
+        <!-- Preloaded Skills Matrix -->
+        <div class="bg-[#0b0f1d] border border-slate-800 rounded-xl p-3">
+          <div id="t_preloadedSkillsTitle" class="text-xs font-semibold mb-1.5 text-slate-200">⚡ Skills Pré-Carregadas (.agents/skills)</div>
+          <div id="skillsChips" class="flex flex-wrap gap-1"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- In-Page Fallback Corner Popup (Starts HIDDEN by default so it never blocks the screen on startup) -->
+    <div id="cornerPopup" style="display: none;" class="fixed bottom-4 right-4 w-80 bg-[#070a14] border-2 border-indigo-500/80 rounded-2xl p-3.5 shadow-2xl z-50">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-2.5">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          <span id="t_popupTitle" class="text-xs font-bold text-white">AGY Mini-Popup (Canto da Tela)</span>
+        </div>
+        <button type="button" onclick="closeCornerPopup()" class="text-xs font-bold text-slate-400 hover:text-white px-2 py-0.5 rounded bg-slate-800/80 hover:bg-rose-600 transition cursor-pointer">✕</button>
+      </div>
+      <div class="flex items-center gap-3">
+        <canvas id="miniPopupCanvas" width="96" height="96" class="w-[88px] h-[88px] rounded-xl bg-[#05070f] border border-slate-800 shrink-0"></canvas>
+        <div class="min-w-0 flex-1 space-y-1 text-xs">
+          <div class="truncate">⚡ <span id="popSkill" class="font-bold text-amber-300">unified-memory</span></div>
+          <div class="truncate">🤖 <span id="popAgent" class="font-bold text-purple-300">planner</span></div>
+          <div id="popThought" class="text-slate-300 truncate">Monitorando sessão...</div>
+          <div class="flex justify-between pt-1.5 border-t border-slate-800 font-mono">
+            <span id="popTok" class="text-amber-300 font-bold">14.4k tok</span>
+            <span id="popCache" class="text-emerald-400">86% cache</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/i18n.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "name": "antigravity-token-monitor",
+  "version": "1.0.0",
+  "description": "Antigravity Mind & Token Radar — Real-time orbital telemetry, thought stream, and token monitor",
+  "private": true,
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test test/*.test.js",
+    "test:coverage": "node --test --experimental-test-coverage test/*.test.js"
+  }
+}

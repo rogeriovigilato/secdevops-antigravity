@@ -1,0 +1,23 @@
+{
+    "name":  "secdevops-antigravity",
+    "version":  "1.0.0",
+    "description":  "SecDevOps, Security Hardening, Decision-Making, and Low-Token Context Router for Antigravity IDE",
+    "license":  "MIT",
+    "engines":  {
+                    "node":  "\u003e=18"
+                },
+    "bin":  {
+                "secdevops-install":  "scripts/install-apply.js"
+            },
+    "scripts":  {
+                    "install:antigravity":  "node scripts/install-apply.js --target antigravity --no-hooks",
+                    "doctor:antigravity":  "node scripts/doctor.js --target antigravity"
+                },
+    "dependencies":  {
+                         "@iarna/toml":  "2.2.5",
+                         "ajv":  "8.20.0",
+                         "js-yaml":  "4.3.2",
+                         "sql.js":  "1.14.2",
+                         "zod":  "4.6.7"
+                     }
+}
