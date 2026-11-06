@@ -1,10 +1,10 @@
-# 01 - Roadmap (O que falta fazer)
+# 01 - Roadmap & Validation Checklist
 
-## Fase Atual — Validação Completa Local (Antes do GitHub)
-- [x] **1. Validar descoberta no Antigravity:** confirmar no novo chat que as 15 skills, os 11 agents e as 6 rules `common-*` foram carregados pelo Antigravity.
-- [x] **2. Validar o Roteador Sob Demanda (`common-secdevops-router.md`):** testar pedir uma skill do catálogo de 67 (ex.: `kubernetes-patterns`) e um modo de contexto (`secops.md`) para ver o modelo lendo automaticamente com `read_file`.
-- [x] **3. Validar CLI de Diagnóstico e Memória:** rodar `doctor.js --target antigravity` (`Status: OK`) e testar um registro no `E:\antigravity-kit\memory-vault`.
-- [x] **4. Revisão final pré-GitHub:** conferir `git status`, incluir `.agents/`, `token-monitor/` e `context/` (Obsidian Graph), criar o primeiro commit limpo na branch `main` e subir para `https://github.com/rogeriovigilato/secdevops-antigravity.git`.
+## Current Phase — Full Local & Pre-GitHub Validation
+- [x] **1. Validate Native Discovery in Antigravity:** Confirmed that the 15 preloaded skills, 11 core agents, 7 workflows, and 6 `common-*` rules are discovered automatically.
+- [x] **2. Validate On-Demand Router & Step #1 Auto-Trigger (`common-secdevops-router.md`):** Verified both manual and blind subagent tests (`96c5425b`), confirming automatic `read_file` activation on Step #1 across Ring 2 and Ring 4 skills.
+- [x] **3. Validate Diagnostics CLI & Memory Vault:** Verified `node scripts/doctor.js --target antigravity` (`Status: OK`, `checked=1, ok=1, warnings=0, errors=0`) and configured `E:\antigravity-kit\memory-vault`.
+- [x] **4. Final Pre-GitHub Audit & Release:** Synchronized `.agents/`, `token-monitor/`, and `context/` (Obsidian Graph), validated SVG/Markdown/tests with `code-reviewer`, and committed to `main` for `https://github.com/rogeriovigilato/secdevops-antigravity.git`.
 
-## Backlog Futuro
-- [x] **Token Monitor (`E:\antigravity-kit\token-monitor`):** versão oficial concluída e verificada com TDD (84.58% cobertura, 14/14 testes passando) + auditoria `code-reviewer` (`APPROVE`). Inclui 4 anéis orbitais (11+15 pré-carregados e 19+67 sob demanda), suporte a múltiplas skills simultâneas, filtro de idioma (`PT-BR` / `EN`), filtro para mostrar/ocultar Sob Demanda (`4 Anéis` vs `2 Anéis`), seletor de sessões com títulos legíveis (`Chat Principal` / `Subagente`), gráfico deslizante de consumo por passo e modo Popup de Canto (`Document Picture-in-Picture`).
+## Completed Milestones
+- [x] **Antigravity Galaxy Mind & Token Radar (`token-monitor/`):** Official visual telemetry monitor verified with TDD (84.58% coverage, 15/15 tests passing) and `code-reviewer` approval. Features 4 orbital rings (11+15 preloaded and 19+67 on-demand), parallel multi-skill lighting, `EN` / `PT-BR` toggle, On-Demand ring filter, friendly session selector + instant refresh button, sliding per-step token chart, and `Document Picture-in-Picture` Corner Popup.

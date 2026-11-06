@@ -31,68 +31,68 @@
     <animate attributeName="r" values="4;8;4" dur="1.8s" repeatCount="indefinite"/>
     <animate attributeName="opacity" values="1;0.35;1" dur="1.8s" repeatCount="indefinite"/>
   </circle>
-  <text x="52" y="38" fill="#ffffff" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="14" font-weight="700">Radar Galáctico Antigravity — Mente &amp; Tokens</text>
-  <text x="52" y="55" fill="#94a3b8" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="10.5">Telemetria em tempo real: onde o agente procura, o que está pensando e pulso de tokens</text>
+  <text x="52" y="38" fill="#ffffff" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="14" font-weight="700">Antigravity Galaxy Mind &amp; Token Radar</text>
+  <text x="52" y="55" fill="#94a3b8" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="10.5">Real-time telemetry: where the agent searches, what it is thinking, and token pulse</text>
 
   <!-- Conversation Dropdown + Refresh Button -->
-  <rect x="435" y="27" width="250" height="30" rx="7" fill="#11172b" stroke="#334155"/>
-  <text x="445" y="46" fill="#67e8f9" font-family="Consolas, monospace" font-size="10.5">🟢 Chat Principal: "Quero segmentar…" (96c5425b)</text>
+  <rect x="445" y="27" width="244" height="30" rx="7" fill="#11172b" stroke="#334155"/>
+  <text x="455" y="46" fill="#67e8f9" font-family="Consolas, monospace" font-size="10.5">🟢 Main Chat: "Segment home VLANs…" (96c5425b)</text>
 
-  <rect x="692" y="27" width="104" height="30" rx="7" fill="#083344" stroke="#22d3ee" stroke-opacity="0.6"/>
-  <text x="703" y="46" fill="#67e8f9" font-family="system-ui, sans-serif" font-size="10.5" font-weight="600">🔄 Atualizar Chats</text>
+  <rect x="696" y="27" width="100" height="30" rx="7" fill="#083344" stroke="#22d3ee" stroke-opacity="0.6"/>
+  <text x="707" y="46" fill="#67e8f9" font-family="system-ui, sans-serif" font-size="10.5" font-weight="600">🔄 Refresh Chats</text>
 
   <!-- Right Control Buttons -->
   <rect x="804" y="27" width="70" height="30" rx="7" fill="#11172b" stroke="#334155"/>
-  <rect x="807" y="30" width="36" height="24" rx="5" fill="#4f46e5"/>
-  <text x="813" y="46" fill="#ffffff" font-family="system-ui, sans-serif" font-size="9.5" font-weight="700">PT-BR</text>
-  <text x="850" y="46" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="9.5" font-weight="700">EN</text>
+  <text x="812" y="46" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="9.5" font-weight="700">PT-BR</text>
+  <rect x="844" y="30" width="27" height="24" rx="5" fill="#4f46e5"/>
+  <text x="850" y="46" fill="#ffffff" font-family="system-ui, sans-serif" font-size="9.5" font-weight="700">EN</text>
 
   <rect x="880" y="27" width="136" height="30" rx="7" fill="#451a03" stroke="#f59e0b" stroke-opacity="0.6"/>
-  <text x="890" y="46" fill="#fcd34d" font-family="system-ui, sans-serif" font-size="10" font-weight="600">🌌 Sob Demanda: 4 Anéis</text>
+  <text x="890" y="46" fill="#fcd34d" font-family="system-ui, sans-serif" font-size="10" font-weight="600">🌌 On-Demand: ON (4 Rings)</text>
 
   <rect x="1022" y="27" width="110" height="30" rx="7" fill="#7e22ce"/>
-  <text x="1032" y="46" fill="#ffffff" font-family="system-ui, sans-serif" font-size="10" font-weight="600">📌 Popup (PiP)</text>
+  <text x="1030" y="46" fill="#ffffff" font-family="system-ui, sans-serif" font-size="10" font-weight="600">📌 Corner Popup</text>
 
   <!-- 4 Top Telemetry Cards -->
   <!-- Card 1: Skill -->
   <rect x="16" y="82" width="273" height="68" rx="11" fill="#0b0f1d" stroke="#06b6d4" stroke-opacity="0.45"/>
-  <text x="28" y="101" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="10.5">⚡ Skill Conectada ao Núcleo</text>
+  <text x="28" y="101" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="10.5">⚡ Core-Connected Skill</text>
   <text x="28" y="122" fill="#22d3ee" font-family="Consolas, monospace" font-size="13.5" font-weight="700">homelab-vlan-segmentation</text>
-  <text x="28" y="139" fill="#fbbf24" font-family="system-ui, sans-serif" font-size="10.5" font-weight="600">★ Anel 4: Sob Demanda (3 Ativas em Paralelo)</text>
+  <text x="28" y="139" fill="#fbbf24" font-family="system-ui, sans-serif" font-size="10.5" font-weight="600">★ Ring 4: On-Demand (3 Active in Parallel)</text>
 
   <!-- Card 2: Agent -->
   <rect x="301" y="82" width="273" height="68" rx="11" fill="#0b0f1d" stroke="#a855f7" stroke-opacity="0.45"/>
-  <text x="313" y="101" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="10.5">🤖 Subagent Conectado</text>
+  <text x="313" y="101" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="10.5">🤖 Connected Subagent</text>
   <text x="313" y="122" fill="#c084fc" font-family="Consolas, monospace" font-size="13.5" font-weight="700">code-reviewer + tdd-guide</text>
-  <text x="313" y="139" fill="#d8b4fe" font-family="system-ui, sans-serif" font-size="10.5">● Anel 1: Pré-carregado (Auto-Trigger Ativo)</text>
+  <text x="313" y="139" fill="#d8b4fe" font-family="system-ui, sans-serif" font-size="10.5">● Ring 1: Preloaded (Auto-Trigger Active)</text>
 
   <!-- Card 3: Tool -->
   <rect x="586" y="82" width="273" height="68" rx="11" fill="#0b0f1d" stroke="#6366f1" stroke-opacity="0.45"/>
-  <text x="598" y="101" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="10.5">🔧 Ferramenta &amp; Arquivo Alvo</text>
+  <text x="598" y="101" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="10.5">🔧 Tool &amp; Target Path</text>
   <text x="598" y="122" fill="#818cf8" font-family="Consolas, monospace" font-size="13.5" font-weight="700">read_file (Auto-Trigger #1)</text>
   <text x="598" y="139" fill="#cbd5e1" font-family="Consolas, monospace" font-size="10.5">skills/homelab-vlan-segmentation/SKILL.md</text>
 
   <!-- Card 4: Tokens -->
   <rect x="871" y="82" width="273" height="68" rx="11" fill="#0b0f1d" stroke="#f59e0b" stroke-opacity="0.45"/>
-  <text x="883" y="101" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="10.5">🪙 Pulso de Tokens &amp; Contexto</text>
-  <text x="883" y="122" fill="#fbbf24" font-family="Consolas, monospace" font-size="13.5" font-weight="700">83.240 tokens</text>
-  <text x="883" y="139" fill="#34d399" font-family="system-ui, sans-serif" font-size="10.5" font-weight="600">Reuso de Cache: 97% · Economia: &gt;85%</text>
+  <text x="883" y="101" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="10.5">🪙 Token Pulse &amp; Context</text>
+  <text x="883" y="122" fill="#fbbf24" font-family="Consolas, monospace" font-size="13.5" font-weight="700">83,240 tokens</text>
+  <text x="883" y="139" fill="#34d399" font-family="system-ui, sans-serif" font-size="10.5" font-weight="600">Cache Hit: 97% · Overhead Saved: &gt;85%</text>
 
   <!-- Left Main Panel: Galaxy Orbit Canvas (740px wide) -->
   <rect x="16" y="162" width="740" height="492" rx="12" fill="#070a14" stroke="#1e293b"/>
 
   <!-- Ring Legend Header -->
   <circle cx="34" cy="182" r="4.5" fill="#c084fc"/>
-  <text x="43" y="186" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="10.5">Anel 1: 11 Agents</text>
+  <text x="43" y="186" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="10.5">Ring 1: 11 Agents</text>
   <circle cx="148" cy="182" r="4.5" fill="#22d3ee"/>
-  <text x="157" y="186" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="10.5">Anel 2: 15 Skills</text>
+  <text x="157" y="186" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="10.5">Ring 2: 15 Skills</text>
   <circle cx="262" cy="182" r="4.5" fill="#f472b6"/>
-  <text x="271" y="186" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="10.5">Anel 3: 19 Agents OD</text>
+  <text x="271" y="186" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="10.5">Ring 3: 19 Agents OD</text>
   <circle cx="395" cy="182" r="4.5" fill="#fbbf24"/>
-  <text x="404" y="186" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="10.5">Anel 4: 67 Skills OD</text>
+  <text x="404" y="186" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="10.5">Ring 4: 67 Skills OD</text>
 
   <rect x="528" y="171" width="216" height="22" rx="5" fill="#0f172a" stroke="#334155"/>
-  <text x="537" y="185" fill="#67e8f9" font-family="Consolas, monospace" font-size="9.5">⚡ 3 Skills + 1 Agent Acesos Agora</text>
+  <text x="537" y="185" fill="#67e8f9" font-family="Consolas, monospace" font-size="9.5">⚡ 3 Skills + 1 Agent Lit Up Now</text>
 
   <!-- GALAXY CENTER AT (386, 422) -->
   <!-- Static Orbit Guide Circles -->
@@ -105,7 +105,6 @@
   <g transform="translate(386, 422)">
     <g>
       <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="68s" repeatCount="indefinite"/>
-      <!-- Sample of evenly spaced Ring 4 spheres + 2 Active Highlighted Skills -->
       <circle cx="206" cy="0" r="4.5" fill="#b45309" stroke="#fbbf24" stroke-width="0.8"/>
       <circle cx="195" cy="63" r="4.5" fill="#b45309" stroke="#fbbf24" stroke-width="0.8"/>
       <circle cx="166" cy="121" r="4.5" fill="#b45309" stroke="#fbbf24" stroke-width="0.8"/>
@@ -217,22 +216,22 @@
 
   <!-- Right Column Panel 1: Thinking Stream -->
   <rect x="768" y="162" width="376" height="122" rx="12" fill="#0b0f1d" stroke="#1e293b"/>
-  <text x="782" y="184" fill="#c084fc" font-family="system-ui, sans-serif" font-size="11" font-weight="700">🧠 O QUE O AGENTE ESTÁ PENSANDO</text>
+  <text x="782" y="184" fill="#c084fc" font-family="system-ui, sans-serif" font-size="11" font-weight="700">🧠 WHAT THE AGENT IS THINKING</text>
   <rect x="1064" y="170" width="66" height="20" rx="5" fill="#1e1b4b"/>
-  <text x="1072" y="184" fill="#a5b4fc" font-family="Consolas, monospace" font-size="10">Passo #1/4</text>
+  <text x="1072" y="184" fill="#a5b4fc" font-family="Consolas, monospace" font-size="10">Step #1/4</text>
 
   <rect x="782" y="194" width="348" height="76" rx="8" fill="#11172b" stroke="#1e293b"/>
-  <text x="794" y="214" fill="#e2e8f0" font-family="system-ui, sans-serif" font-size="11">⚡ Auto-Trigger (Seção 4) acionado no Passo #1:</text>
+  <text x="794" y="214" fill="#e2e8f0" font-family="system-ui, sans-serif" font-size="11">⚡ Auto-Trigger (Section 4) fired on Step #1:</text>
   <text x="794" y="232" fill="#67e8f9" font-family="Consolas, monospace" font-size="10.5">→ read_file: homelab-vlan-segmentation/SKILL.md</text>
   <text x="794" y="248" fill="#fcd34d" font-family="Consolas, monospace" font-size="10.5">→ read_file: cisco-ios-patterns/SKILL.md</text>
   <text x="794" y="264" fill="#34d399" font-family="Consolas, monospace" font-size="10.5">→ read_file: network-config-validation/SKILL.md</text>
 
-  <!-- Right Column Panel 2: Sliding Token Peaks per Step -->
+  <!-- Right Column Panel 2: Sliding Token Usage per Step -->
   <rect x="768" y="294" width="376" height="182" rx="12" fill="#0b0f1d" stroke="#1e293b"/>
-  <text x="782" y="316" fill="#fbbf24" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700">📊 Consumo de Tokens por Passo</text>
+  <text x="782" y="316" fill="#fbbf24" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700">📊 Token Usage per Step</text>
   <rect x="1055" y="302" width="75" height="20" rx="5" fill="#0f172a" stroke="#1e293b"/>
   <text x="1063" y="316" fill="#cbd5e1" font-family="Consolas, monospace" font-size="10">#1–#6 / 6</text>
-  <text x="782" y="333" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="10">Altura = tokens novos no passo (+In/Out) · Clique para inspecionar</text>
+  <text x="782" y="333" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="10">Bar height = new tokens in step (+In/Out) · Click any bar to inspect</text>
 
   <!-- 6 Columns of Token Peaks -->
   <!-- Bar 1 (Active) -->
@@ -276,15 +275,15 @@
 
   <!-- Selected Step Summary Footer -->
   <line x1="782" y1="444" x2="1130" y2="444" stroke="#1e293b"/>
-  <text x="782" y="462" fill="#fcd34d" font-family="Consolas, monospace" font-size="10" font-weight="700">⚡ Passo #1: +2.410 novos (read_file)</text>
-  <text x="1002" y="462" fill="#34d399" font-family="Consolas, monospace" font-size="10">Total: 83k (97% cache)</text>
+  <text x="782" y="462" fill="#fcd34d" font-family="Consolas, monospace" font-size="10" font-weight="700">⚡ Step #1: +2,410 new (read_file)</text>
+  <text x="992" y="462" fill="#34d399" font-family="Consolas, monospace" font-size="10">Total: 83k (97% cached)</text>
 
-  <!-- Right Column Panel 3: Preloaded Chips Matrix + Mini PiP Preview -->
+  <!-- Right Column Panel 3: Mini PiP Corner HUD Preview -->
   <rect x="768" y="486" width="376" height="168" rx="12" fill="#0b0f1d" stroke="#6366f1" stroke-opacity="0.7" stroke-width="1.5"/>
   <circle cx="786" cy="506" r="4.5" fill="#34d399">
     <animate attributeName="opacity" values="1;0.2;1" dur="1.4s" repeatCount="indefinite"/>
   </circle>
-  <text x="798" y="510" fill="#ffffff" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700">AGY Mini-Popup (Canto da Tela / PiP)</text>
+  <text x="798" y="510" fill="#ffffff" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700">AGY Mini-Popup (Corner HUD / PiP)</text>
   <rect x="1108" y="495" width="22" height="18" rx="4" fill="#1e293b"/>
   <text x="1115" y="508" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="10" font-weight="700">✕</text>
   <line x1="782" y1="520" x2="1130" y2="520" stroke="#1e293b"/>
@@ -307,8 +306,8 @@
   <!-- Mini PiP Text Info -->
   <text x="906" y="550" fill="#fcd34d" font-family="Consolas, monospace" font-size="11.5" font-weight="700">⚡ homelab-vlan-segmentation</text>
   <text x="906" y="570" fill="#d8b4fe" font-family="Consolas, monospace" font-size="11.5" font-weight="700">🤖 code-reviewer + tdd-guide</text>
-  <text x="906" y="592" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="11">Lendo 3 skills em paralelo no Passo #1…</text>
+  <text x="906" y="592" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="11">Reading 3 skills in parallel on Step #1…</text>
   <line x1="906" y1="606" x2="1126" y2="606" stroke="#1e293b"/>
   <text x="906" y="626" fill="#fbbf24" font-family="Consolas, monospace" font-size="11.5" font-weight="700">83.2k tokens</text>
-  <text x="1042" y="626" fill="#34d399" font-family="Consolas, monospace" font-size="11.5" font-weight="700">97% em cache</text>
+  <text x="1042" y="626" fill="#34d399" font-family="Consolas, monospace" font-size="11.5" font-weight="700">97% cached</text>
 </svg>

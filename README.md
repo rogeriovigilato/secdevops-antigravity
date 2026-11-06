@@ -5,58 +5,58 @@
 </p>
 
 <p align="center">
-  <strong>Arquitetura de Agentes em 2 Camadas (&gt;85% Economia de Tokens) • Auto-Trigger Inteligente no Passo #1 • Monitor Galáctico de Telemetria em Tempo Real • Grafo de Contexto Obsidian</strong>
+  <strong>2-Tier Agent Architecture (&gt;85% Token Savings) • Step #1 Auto-Trigger Router • Real-Time Galaxy Mind &amp; Token Radar (PiP) • Obsidian Context Graph</strong>
 </p>
 
 ---
 
-## 🚀 Visão Geral
+## 🚀 Overview
 
-O **SecDevOps Antigravity** é um ecossistema completo de Engenharia, Segurança (SecOps/OSINT), Redes/Homelab, Arquitetura de Software, TDD e Governança de Contexto projetado nativamente para o **Google Antigravity (AGY)**.
+**SecDevOps Antigravity** is a full-stack Software Engineering, Security (SecOps/OSINT), Networking/Homelab, System Architecture, TDD, and Context Governance ecosystem built natively for **Google Antigravity (AGY)**.
 
-Em vez de carregar todas as 82 skills e 30 subagentes de uma vez no prompt de sistema (o que consumiria milhares de tokens a cada mensagem), este projeto implementa uma **Arquitetura Orbital em 4 Anéis (2 Camadas)** com **Auto-Gatilho Obrigatório (Seção 4 do Roteador)**:
+Instead of injecting all 82 skills and 30 subagents into the system prompt on every turn (which wastes thousands of tokens per message), this repository implements a **4-Ring Orbital Architecture (2 Tiers)** powered by **Mandatory Step #1 Auto-Triggers**:
 
-| Anel Orbital | Camada | Itens | Como Funciona |
+| Orbital Ring | Tier | Count | How It Works |
 | :--- | :--- | :--- | :--- |
-| **🟣 Anel 1** | Pré-Carregada (`.agents/agents/`) | **11 Agents Principais** | Sempre prontos na sessão (`planner`, `architect`, `tdd-guide`, `code-reviewer`, `security-reviewer`, `database-reviewer`, `python-reviewer`, `network-config-reviewer`, `network-troubleshooter`, `build-error-resolver`, `code-explorer`) |
-| **🔵 Anel 2** | Pré-Carregada (`.agents/skills/`) | **15 Skills Principais** | Skills de alta frequência (`verification-loop`, `security-review`, `git-workflow`, `docker-patterns`, `deployment-patterns`, `network-config-validation`, `unified-memory`, `strategic-compact`, etc.) |
-| **🩷 Anel 3** | Sob Demanda (`agents/`) | **19 Agents Especialistas** | Subagentes adicionais para linguagens e domínios específicos |
-| **🟡 Anel 4** | Sob Demanda (`skills/`) | **67 Skills Especializadas** | Carregadas automaticamente via `read_file` no **Passo #1** pelo índice em `common-secdevops-router.md` apenas quando o assunto exige |
+| **🟣 Ring 1** | Preloaded (`.agents/agents/`) | **11 Core Agents** | Always ready in session (`planner`, `architect`, `tdd-guide`, `code-reviewer`, `security-reviewer`, `database-reviewer`, `python-reviewer`, `network-config-reviewer`, `network-troubleshooter`, `build-error-resolver`, `code-explorer`) |
+| **🔵 Ring 2** | Preloaded (`.agents/skills/`) | **15 Core Skills** | High-frequency skills (`verification-loop`, `security-review`, `git-workflow`, `docker-patterns`, `deployment-patterns`, `network-config-validation`, `unified-memory`, `strategic-compact`, etc.) |
+| **🩷 Ring 3** | On-Demand (`agents/`) | **19 Specialist Agents** | Specialized language and domain subagents loaded when needed |
+| **🟡 Ring 4** | On-Demand (`skills/`) | **67 Specialist Skills** | Automatically loaded via `read_file` on **Step #1** through the index in `common-secdevops-router.md` only when the prompt touches that domain |
 
 ---
 
-## ⚡ Auto-Gatilhos Obrigatórios & Delivery Gate (`common-secdevops-router.md`)
+## ⚡ Mandatory Auto-Triggers & Delivery Gate (`common-secdevops-router.md`)
 
-Graças à **Seção 4 (`Mandatory Auto-Triggers & Delivery Gate`)** configurada em `.agents/rules/common-secdevops-router.md`, você **não precisa lembrar nem digitar o nome de nenhuma skill ou subagente**:
+Thanks to **Section 4 (`Mandatory Auto-Triggers & Delivery Gate`)** in `.agents/rules/common-secdevops-router.md`, you **never need to remember or type any skill or subagent name**:
 
-1. **Auto-Skill Trigger no Passo #1:** Sempre que sua pergunta tocar em qualquer domínio do catálogo (Redes, VLAN, Cisco IOS, WireGuard, Pi-hole, Kubernetes, PostgreSQL, Redis, Segurança, OSINT, etc.), o agente aciona `read_file` automaticamente nas `SKILL.md` correspondentes antes de responder.
-2. **Delivery Gate Automático Pós-Código:** Após criar ou editar qualquer código ou interface, o agente é obrigado a:
-   - Rodar a suíte de testes automatizados (`node --test` / `pytest` / `go test`) e confirmar 100% de aprovação;
-   - Acionar automaticamente o subagente `code-reviewer` (e `security-reviewer` / `network-config-reviewer` quando aplicável);
-   - Validar servidores locais em modo daemon (`IsDaemon: true`) com verificação de status HTTP.
+1. **Step #1 Auto-Skill Trigger:** Whenever a prompt touches any domain covered by the catalog (Networking, VLANs, Cisco IOS, WireGuard, Pi-hole, Kubernetes, PostgreSQL, Redis, Security, OSINT, etc.), the agent automatically calls `read_file` on the matching `SKILL.md` files on its very first step.
+2. **Post-Code Automated Delivery Gate:** After creating or modifying any code, script, or UI file, the agent is strictly required to:
+   - Run the automated test suite (`node --test` / `pytest` / `go test`) and verify a 100% pass rate;
+   - Automatically invoke the `code-reviewer` subagent (plus `security-reviewer` / `network-config-reviewer` when applicable);
+   - Verify any local daemon server (`IsDaemon: true`) with a live HTTP health check.
 
 ---
 
-## 🛰️ Radar Galáctico Antigravity — Mente & Tokens (`token-monitor/`)
+## 🛰️ Antigravity Galaxy Mind & Token Radar (`token-monitor/`)
 
-O repositório inclui o **Antigravity Galaxy Mind & Token Radar** (`token-monitor/`), um painel visual em tempo real (`http://127.0.0.1:4317`) com suporte a **Document Picture-in-Picture (PiP)**:
+This repository includes the **Antigravity Galaxy Mind & Token Radar** (`token-monitor/`), a real-time visual telemetry server (`http://127.0.0.1:4317`) with native **Document Picture-in-Picture (PiP)** support:
 
-- **Órbita Interativa de 4 Anéis:** Veja em tempo real quais Skills (Anéis 2 e 4) e Subagentes (Anéis 1 e 3) estão conectados ao núcleo `AGY CORE` — inclusive quando múltiplas skills acendem simultaneamente no mesmo passo.
-- **Seletor de Sessões Inteligente + Botão `🔄 Atualizar Chats`:** Identifica automaticamente **Chats Principais (`🟢`)** e **Subagentes (`🤖`)**, exibindo o assunto da conversa e o total de passos.
-- **Gráfico Deslizante de Consumo de Tokens por Passo:** Acompanha o passo inspecionado (`⏮ Anterior` / `⏭ Próximo`), mostrando os tokens novos gastos em cada passo (`+In/Out`), o ícone da ação executada (`⚡` Skill, `🤖` Subagente, `💻` Terminal, `📄` Leitura, `✏️` Edição) e a taxa de **Reuso de Cache**.
-- **Filtros Instantâneos:** Alternância `PT-BR` / `EN` e filtro `Mostrar Sob Demanda: SIM (4 Anéis) / NÃO (Só Carregados)`.
-- **Mini-Popup Flutuante (`📌 Popup no Canto / PiP`):** Janela compacta sempre no topo para acompanhar os feixes e o consumo de tokens enquanto programa.
+- **Interactive 4-Ring Galaxy Orbit:** Watch in real time which Skills (Rings 2 & 4) and Subagents (Rings 1 & 3) are connected to the `AGY CORE` nucleus — including parallel multi-skill activations on the same step.
+- **Smart Session Selector + `🔄 Refresh Chats` Button:** Automatically distinguishes **Main Chats (`🟢`)** and **Subagents (`🤖`)**, displaying the human-readable conversation topic and step count.
+- **Sliding Token Usage per Step Chart:** Follows your inspected step (`⏮ Prev` / `⏭ Next`), displaying the new tokens spent per step (`+In/Out`), the action icon (`⚡` Skill, `🤖` Subagent, `💻` Terminal, `📄` Read, `✏️` Edit), and the **Cache Hit Rate**.
+- **Instant Filters:** Toggle between `EN` / `PT-BR` and `Show On-Demand: ON (4 Rings) / OFF (Preloaded Only)`.
+- **Always-on-Top Corner HUD (`📌 Corner Popup / PiP`):** Compact floating window with self-contained dark styling so you can monitor active beams and token usage while coding.
 
-### Comandos Rápidos no Chat (`/monitor`)
+### Slash Workflow Commands (`/monitor`)
 
 ```text
-/monitor start    # Inicia o servidor em background e abre http://127.0.0.1:4317
-/monitor popup    # Abre diretamente no modo Mini-Popup de canto
-/monitor status   # Exibe o resumo de tokens e cache da sessão atual no chat
-/monitor stop     # Encerra o servidor local na porta 4317
+/monitor start    # Starts the background daemon server and opens http://127.0.0.1:4317
+/monitor popup    # Opens directly in compact Corner Popup mode
+/monitor status   # Prints live token and cache telemetry in chat
+/monitor stop     # Stops the local monitor server on port 4317
 ```
 
-Ou via terminal:
+Or via terminal:
 
 ```bash
 node token-monitor/src/cli.js start
@@ -65,56 +65,56 @@ node --test token-monitor/test/*.test.js
 
 ---
 
-## 🧠 Painel de Contexto Local & Grafo Obsidian (`context/`)
+## 🧠 Local Context Gate & Obsidian Graph (`context/`)
 
-O projeto mantém sua memória arquitetural estruturada na pasta `context/`, pronta para visualização no **Obsidian Graph View**:
+Architectural decisions, verified state, and roadmaps are maintained in `context/`, structured for **Obsidian Graph View**:
 
 <p align="center">
   <img src="./docs/assets/obsidian-context-graph.png" alt="Obsidian Context Graph View" width="85%" />
 </p>
 
-- **`context/00-INDEX.md`** — Ponto central do grafo conectando todos os documentos de governança.
-- **`context/00-STATE.md`** — Estado atual verificado, isolamento de ambiente e fluxo de trabalho.
-- **`context/01-ROADMAP.md`** — Checklist de validação e evolução contínua.
-- **`context/02-DECISIONS.md`** — Registros de Decisão de Arquitetura (ADRs).
-- **`context/03-CHANGELOG-LOCAL.md`** — Histórico cronológico de entregas 100% testadas e livres de bugs.
-- **`context/04-ARCHITECTURE.md`** — Mapa completo da estrutura de diretórios.
+- **`context/00-INDEX.md`** — Central hub linking all governance documents.
+- **`context/00-STATE.md`** — Verified current state, environment isolation, and workflow rules.
+- **`context/01-ROADMAP.md`** — Validation checklist and continuous roadmap.
+- **`context/02-DECISIONS.md`** — Architecture Decision Records (ADRs).
+- **`context/03-CHANGELOG-LOCAL.md`** — Chronological log of 100% tested and verified deliverables.
+- **`context/04-ARCHITECTURE.md`** — Complete directory and two-tier architecture map.
 
 ---
 
-## 📂 Estrutura do Repositório
+## 📂 Repository Structure
 
 ```text
 secdevops-antigravity/
-├── .agents/                  # Perfil Pré-Carregado (15 skills, 11 agents, 7 workflows incl. /monitor, 20 rules)
-├── token-monitor/            # Radar Galáctico & Monitor de Tokens (127.0.0.1:4317 + 15 testes automatizados)
-├── context/                  # Cofre de Contexto & ADRs compatível com Obsidian Graph View
-├── agents/                   # Catálogo completo com 30 definições de subagentes
-├── skills/                   # Catálogo completo com 82 skills (SecDevOps, Homelab, Cloud, Backend, OSINT, TDD)
-├── commands/                 # 87 workflows e comandos slash (incluindo /monitor)
-├── contexts/                 # 4 modos operacionais (dev.md, review.md, research.md, secops.md)
-├── rules/                    # Regras modulares (common, python, typescript, golang)
-├── scripts/                  # Instalador multi-perfil, doctor.js, repair.js e utilitários de memória
-└── manifests/                # Manifestos de módulos e perfis de instalação
+├── .agents/                  # Preloaded 2-Tier Profile (15 skills, 11 agents, 7 workflows incl. /monitor, 20 rules)
+├── token-monitor/            # Official Galaxy Mind & Token Radar (127.0.0.1:4317 + 15 automated tests)
+├── context/                  # Architectural Context Ledger compatible with Obsidian Graph View
+├── agents/                   # Full catalog of 30 specialized subagent definitions
+├── skills/                   # Full catalog of 82 skills (SecDevOps, Homelab, Cloud, Backend, OSINT, TDD)
+├── commands/                 # 87 slash workflows and commands (including /monitor)
+├── contexts/                 # 4 operational posture modes (dev.md, review.md, research.md, secops.md)
+├── rules/                    # Modular rule packs (common, python, typescript, golang)
+├── scripts/                  # Multi-target installer, doctor.js, repair.js, and memory utilities
+└── manifests/                # Installer module and profile manifests
 ```
 
 ---
 
-## 🛠️ Como Usar
+## 🛠️ Quick Start
 
-1. **Uso Direto (Zero Configuração):**
-   Basta clonar este repositório e abrir a pasta no **Antigravity**. Como a pasta `.agents/` já está pré-configurada na raiz, todas as **15 skills pré-carregadas**, **11 agents**, **7 workflows (`/monitor`)**, **20 rules** e o **roteador para as 67 skills sob demanda** entram em vigor imediatamente!
-2. **Diagnóstico de Saúde (`doctor.js`):**
+1. **Zero-Config Workspace Usage:**
+   Clone this repository and open it in **Google Antigravity**. Because `.agents/` is pre-configured at the root, all **15 preloaded skills**, **11 agents**, **7 workflows (`/monitor`)**, **20 rules**, and the **on-demand router for all 67 specialist skills** are active out of the box!
+2. **Health Diagnostics (`doctor.js`):**
    ```bash
    node scripts/doctor.js --target antigravity
    ```
-3. **Executar Testes do Token Monitor:**
+3. **Run the Token Monitor Test Suite:**
    ```bash
    node --test token-monitor/test/*.test.js
    ```
 
 ---
 
-## 📄 Licença
+## 📄 License
 
-Distribuído sob a licença **MIT**. Veja [LICENSE](./LICENSE) para mais informações.
+Distributed under the **MIT License**. See [LICENSE](./LICENSE) for details.
