@@ -309,24 +309,24 @@ function renderUI() {
 
   // Agents Chips
   document.getElementById('agentsChips').innerHTML = catalog.ring1Agents.map(ag => {
-    const hits = counts.agents[ag] || 0;
+    const hits = Number(counts.agents[ag]) || 0;
     const act = ag === s.agent;
     return `<span class="px-1.5 py-0.5 rounded text-xs font-mono border ${
       act ? 'bg-purple-600 text-white border-purple-300 font-bold' : 'bg-[#11172b] text-slate-400 border-slate-800'
-    }">${ag} (${hits}x)</span>`;
+    }">${escapeHtml(ag)} (${hits}x)</span>`;
   }).join('');
 
   // Skills Chips
   let skHtml = catalog.ring2Skills.map(sk => {
-    const hits = counts.skills[sk] || 0;
+    const hits = Number(counts.skills[sk]) || 0;
     const act = sk === s.skill;
     return `<span class="px-1.5 py-0.5 rounded text-xs font-mono border ${
       act ? 'bg-cyan-600 text-white border-cyan-300 font-bold' : 'bg-[#11172b] text-slate-400 border-slate-800'
-    }">${sk} (${hits}x)</span>`;
+    }">${escapeHtml(sk)} (${hits}x)</span>`;
   }).join('');
   if (showOnDemand && s.isOnDemandSkill) {
-    const odHits = counts.skills[s.skill] || 1;
-    skHtml += `<span class="px-1.5 py-0.5 rounded text-xs font-mono border bg-amber-500/20 text-amber-300 border-amber-400 font-bold">★ ${s.skill} (${odHits}x)</span>`;
+    const odHits = Number(counts.skills[s.skill]) || 1;
+    skHtml += `<span class="px-1.5 py-0.5 rounded text-xs font-mono border bg-amber-500/20 text-amber-300 border-amber-400 font-bold">★ ${escapeHtml(s.skill)} (${odHits}x)</span>`;
   }
   document.getElementById('skillsChips').innerHTML = skHtml;
 }

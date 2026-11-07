@@ -40,10 +40,31 @@ function startBackgroundServer(options = {}) {
   return child.pid;
 }
 
+function validateLocalMonitorUrl(rawUrl) {
+  let parsed;
+  try {
+    parsed = new URL(String(rawUrl || ''));
+  } catch {
+    throw new Error('Invalid monitor URL');
+  }
+  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+    throw new Error('Invalid monitor URL protocol');
+  }
+  const host = parsed.hostname.toLowerCase();
+  if (host !== '127.0.0.1' && host !== 'localhost') {
+    throw new Error('Untrusted monitor host');
+  }
+  if (parsed.pathname !== '/' || parsed.search || parsed.hash) {
+    throw new Error('Invalid monitor URL path');
+  }
+  return parsed.href;
+}
+
 function openBrowserUrl(url, mode = 'tab') {
   if (process.env.AGY_NO_OPEN === '1') return;
+  const safeUrl = validateLocalMonitorUrl(url);
   if (mode === 'popup') {
-    const cmd = `Start-Process msedge -ArgumentList '--app=${url}','--window-size=420,320' -ErrorAction SilentlyContinue`;
+    const cmd = `Start-Process msedge -ArgumentList '--app=${safeUrl}','--window-size=420,320' -ErrorAction SilentlyContinue`;
     const child = spawn('powershell.exe', ['-NoProfile', '-Command', cmd], {
       detached: true,
       stdio: 'ignore',
@@ -52,7 +73,7 @@ function openBrowserUrl(url, mode = 'tab') {
     child.unref();
     return;
   }
-  const child = spawn('cmd.exe', ['/c', 'start', '', url], {
+  const child = spawn('cmd.exe', ['/c', 'start', '', safeUrl], {
     detached: true,
     stdio: 'ignore',
     windowsHide: true
@@ -108,5 +129,6 @@ if (require.main === module) {
 
 module.exports = {
   checkServerStatus,
-  runCliCommand
+  runCliCommand,
+  validateLocalMonitorUrl
 };

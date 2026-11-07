@@ -119,7 +119,7 @@ Architectural decisions, verified state, and roadmaps are maintained in `context
 ```text
 secdevops-antigravity/
 ├── .agents/                  # Preloaded 2-Tier Profile (15 skills, 11 agents, 7 workflows incl. /monitor, 20 rules)
-├── token-monitor/            # Official Galaxy Mind & Token Radar (127.0.0.1:4317 + 16 automated tests)
+├── token-monitor/            # Official Galaxy Mind & Token Radar (127.0.0.1:4317 + 22 automated unit/UI/security tests)
 ├── context/                  # Architectural Context Ledger compatible with Obsidian Graph View
 ├── agents/                   # Full catalog of 30 specialized subagent definitions
 ├── skills/                   # Full catalog of 82 skills (SecDevOps, Homelab, Cloud, Backend, OSINT, TDD)

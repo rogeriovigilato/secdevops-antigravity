@@ -55,17 +55,34 @@ function buildLiveState(options = {}) {
   });
 }
 
+const SECURITY_HEADERS = Object.freeze({
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'DENY',
+  'Referrer-Policy': 'no-referrer'
+});
+
+const ALLOWED_HOSTS = new Set(['127.0.0.1', 'localhost']);
+
+function isSafePublicPath(baseDir, resolvedPath) {
+  const rel = path.relative(baseDir, resolvedPath);
+  return Boolean(rel) && !rel.startsWith('..') && !path.isAbsolute(rel);
+}
+
 function serveStaticFile(reqPath, res) {
   const safeRel = reqPath === '/' ? 'index.html' : reqPath.replace(/^\/+/, '');
   const resolved = path.resolve(PUBLIC_DIR, safeRel);
-  if (!resolved.startsWith(PUBLIC_DIR) || !fs.existsSync(resolved) || !fs.statSync(resolved).isFile()) {
-    res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
+  if (!isSafePublicPath(PUBLIC_DIR, resolved) || !fs.existsSync(resolved) || !fs.statSync(resolved).isFile()) {
+    res.writeHead(404, {
+      ...SECURITY_HEADERS,
+      'Content-Type': 'application/json; charset=utf-8'
+    });
     res.end(JSON.stringify({ error: 'Not found' }));
     return;
   }
   const ext = path.extname(resolved).toLowerCase();
   const contentType = MIME_TYPES[ext] || 'application/octet-stream';
   res.writeHead(200, {
+    ...SECURITY_HEADERS,
     'Content-Type': contentType,
     'Cache-Control': 'no-store'
   });
@@ -77,6 +94,16 @@ function createMonitorServer(options = {}) {
 
   const server = http.createServer((req, res) => {
     try {
+      const rawHost = String(req.headers.host || '').split(':')[0].toLowerCase().trim();
+      if (rawHost && !ALLOWED_HOSTS.has(rawHost)) {
+        res.writeHead(403, {
+          ...SECURITY_HEADERS,
+          'Content-Type': 'application/json; charset=utf-8'
+        });
+        res.end(JSON.stringify({ error: 'Forbidden Host header' }));
+        return;
+      }
+
       const parsedUrl = new URL(req.url || '/', `http://${DEFAULT_HOST}`);
       const pathname = parsedUrl.pathname;
 
@@ -84,6 +111,7 @@ function createMonitorServer(options = {}) {
         const convId = parsedUrl.searchParams.get('conv') || undefined;
         const state = buildLiveState({ ...options, conversationId: convId });
         res.writeHead(200, {
+          ...SECURITY_HEADERS,
           'Content-Type': 'application/json; charset=utf-8',
           'Cache-Control': 'no-store'
         });
@@ -93,6 +121,7 @@ function createMonitorServer(options = {}) {
 
       if (pathname === '/api/events') {
         res.writeHead(200, {
+          ...SECURITY_HEADERS,
           'Content-Type': 'text/event-stream; charset=utf-8',
           'Cache-Control': 'no-cache, no-transform',
           'Connection': 'keep-alive'
@@ -104,9 +133,12 @@ function createMonitorServer(options = {}) {
       }
 
       serveStaticFile(pathname, res);
-    } catch (err) {
-      res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
-      res.end(JSON.stringify({ error: 'Internal server error', detail: err.message }));
+    } catch {
+      res.writeHead(500, {
+        ...SECURITY_HEADERS,
+        'Content-Type': 'application/json; charset=utf-8'
+      });
+      res.end(JSON.stringify({ error: 'Internal server error' }));
     }
   });
 
@@ -138,6 +170,8 @@ if (require.main === module) {
 module.exports = {
   buildLiveState,
   createMonitorServer,
+  isSafePublicPath,
+  SECURITY_HEADERS,
   DEFAULT_HOST,
   DEFAULT_PORT,
   DEFAULT_BRAIN_ROOT
