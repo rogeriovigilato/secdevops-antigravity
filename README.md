@@ -73,7 +73,7 @@ We also ran twin 1-step subagent probes (`TypeName: "self"`, identical prompt: `
 
 This repository includes the **Antigravity Galaxy Mind & Token Radar** (`token-monitor/`), a real-time visual telemetry server (`http://127.0.0.1:4317`) with native **Document Picture-in-Picture (PiP)** support:
 
-- **Interactive 4-Ring Galaxy Orbit:** Watch in real time which Skills (Rings 2 & 4) and Subagents (Rings 1 & 3) are connected to the `AGY CORE` nucleus — including parallel multi-skill activations on the same step.
+- **Interactive 4-Ring Galaxy Orbit & Node Inspector:** Watch in real time which Skills (Rings 2 & 4) and Subagents (Rings 1 & 3) are connected to the `AGY CORE` nucleus — and **click any orbiting sphere (or chip)** to open an interactive summary card explaining what that skill or subagent does (`PT-BR` & `EN`).
 - **Smart Session Selector + `🔄 Refresh Chats` Button:** Automatically distinguishes **Main Chats (`🟢`)** and **Subagents (`🤖`)**, displaying the human-readable conversation topic and step count.
 - **Sliding Token Usage per Step Chart:** Follows your inspected step (`⏮ Prev` / `⏭ Next`), displaying the new tokens spent per step (`+In/Out`), the action icon (`⚡` Skill, `🤖` Subagent, `💻` Terminal, `📄` Read, `✏️` Edit), and the **Cache Hit Rate**.
 - **Instant Filters:** Toggle between `EN` / `PT-BR` and `Show On-Demand: ON (4 Rings) / OFF (Preloaded Only)`.
@@ -119,7 +119,7 @@ Architectural decisions, verified state, and roadmaps are maintained in `context
 ```text
 secdevops-antigravity/
 ├── .agents/                  # Preloaded 2-Tier Profile (15 skills, 11 agents, 7 workflows incl. /monitor, 20 rules)
-├── token-monitor/            # Official Galaxy Mind & Token Radar (127.0.0.1:4317 + 22 automated unit/UI/security tests)
+├── token-monitor/            # Official Galaxy Mind & Token Radar (127.0.0.1:4317 + 24 automated unit/UI/security tests)
 ├── context/                  # Architectural Context Ledger compatible with Obsidian Graph View
 ├── agents/                   # Full catalog of 30 specialized subagent definitions
 ├── skills/                   # Full catalog of 82 skills (SecDevOps, Homelab, Cloud, Backend, OSINT, TDD)

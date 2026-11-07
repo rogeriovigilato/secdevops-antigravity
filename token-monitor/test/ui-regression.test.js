@@ -59,3 +59,15 @@ test('UI Regression: real-time liveFollow mode tracks latest step without 4.2s s
   assert.match(appJs, /function inspectStep\(/);
   assert.doesNotMatch(appJs, /4200/);
 });
+
+test('UI Regression: clicking an orbiting sphere opens #nodeInspectorCard with summary description', () => {
+  const html = fs.readFileSync(htmlPath, 'utf8');
+  assert.match(html, /id="nodeInspectorCard"\s+style="display:\s*none;"/);
+  assert.match(html, /id="nodeInspectorDesc"/);
+  assert.match(html, /onclick="closeNodeInspector\(\)"/);
+
+  const appJs = fs.readFileSync(appJsPath, 'utf8');
+  assert.match(appJs, /canvas\.addEventListener\('click'/);
+  assert.match(appJs, /function selectOrbitNode\(/);
+  assert.match(appJs, /function closeNodeInspector\(/);
+});

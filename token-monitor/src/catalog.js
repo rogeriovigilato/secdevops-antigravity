@@ -46,9 +46,30 @@ function readMarkdownBasenames(dirPath) {
   }
 }
 
+function extractFrontmatterDescription(filePath) {
+  try {
+    if (!fs.existsSync(filePath)) return '';
+    const raw = fs.readFileSync(filePath, 'utf8');
+    const fmMatch = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+    if (!fmMatch) return '';
+    const descMatch = fmMatch[1].match(/^description:\s*(.+)$/m);
+    if (!descMatch) return '';
+    return descMatch[1].trim().replace(/^["']|["']$/g, '');
+  } catch {
+    return '';
+  }
+}
+
+let cachedCatalogKey = null;
+let cachedCatalogObj = null;
+
 function loadCatalog(options = {}) {
   const preloadedRoot = options.preloadedRoot || resolveDefaultPreloadedRoot();
   const catalogRoot = options.catalogRoot || resolveDefaultCatalogRoot();
+  const cacheKey = `${preloadedRoot}|${catalogRoot}`;
+  if (cachedCatalogKey === cacheKey && cachedCatalogObj) {
+    return cachedCatalogObj;
+  }
 
   const ring1Agents = readMarkdownBasenames(path.join(preloadedRoot, 'agents'));
   const ring2Skills = readDirSubfolders(path.join(preloadedRoot, 'skills'));
@@ -65,18 +86,39 @@ function loadCatalog(options = {}) {
   const ring3AgentsOD = allAgents.filter(name => !preloadedAgentSet.has(name));
   const ring4SkillsOD = allSkills.filter(name => !preloadedSkillSet.has(name));
 
-  return Object.freeze({
+  const skillDescriptions = {};
+  for (const sk of [...ring2Skills, ...ring4SkillsOD]) {
+    const prePath = path.join(preloadedRoot, 'skills', sk, 'SKILL.md');
+    const catPath = path.join(catalogRoot, 'skills', sk, 'SKILL.md');
+    skillDescriptions[sk] = extractFrontmatterDescription(fs.existsSync(prePath) ? prePath : catPath);
+  }
+
+  const agentDescriptions = {};
+  for (const ag of [...ring1Agents, ...ring3AgentsOD]) {
+    const prePath = path.join(preloadedRoot, 'agents', `${ag}.md`);
+    const catPath = path.join(catalogRoot, 'agents', `${ag}.md`);
+    agentDescriptions[ag] = extractFrontmatterDescription(fs.existsSync(prePath) ? prePath : catPath);
+  }
+
+  cachedCatalogObj = Object.freeze({
     ring1Agents: Object.freeze(ring1Agents),
     ring2Skills: Object.freeze(ring2Skills),
     ring3AgentsOD: Object.freeze(ring3AgentsOD),
     ring4SkillsOD: Object.freeze(ring4SkillsOD),
     rules: Object.freeze(rules),
-    workflows: Object.freeze(workflows)
+    workflows: Object.freeze(workflows),
+    descriptions: Object.freeze({
+      skills: Object.freeze(skillDescriptions),
+      agents: Object.freeze(agentDescriptions)
+    })
   });
+  cachedCatalogKey = cacheKey;
+  return cachedCatalogObj;
 }
 
 module.exports = {
   loadCatalog,
+  extractFrontmatterDescription,
   resolveDefaultPreloadedRoot,
   resolveDefaultCatalogRoot,
   readDirSubfolders,

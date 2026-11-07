@@ -34,3 +34,13 @@ test('portable defaults resolve relative to repo root and os.homedir() instead o
   assert.ok(DEFAULT_BRAIN_ROOT.startsWith(os.homedir()) || Boolean(process.env.AGY_BRAIN_ROOT));
   assert.ok(path.isAbsolute(resolveDefaultCatalogRoot()));
 });
+
+test('loadCatalog extracts YAML frontmatter descriptions for skills and agents', () => {
+  const catalog = loadCatalog();
+  assert.ok(catalog.descriptions && typeof catalog.descriptions === 'object');
+  assert.ok(typeof catalog.descriptions.skills['security-review'] === 'string');
+  assert.ok(catalog.descriptions.skills['security-review'].length > 20);
+  assert.ok(typeof catalog.descriptions.skills['homelab-vlan-segmentation'] === 'string');
+  assert.ok(typeof catalog.descriptions.agents['security-reviewer'] === 'string');
+  assert.ok(catalog.descriptions.agents['security-reviewer'].length > 20);
+});

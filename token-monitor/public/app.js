@@ -10,6 +10,7 @@ let tick = 0;
 let pulse = 0;
 let hitZones = [];
 let hoveredBall = null;
+let selectedBall = null;
 let activePipWindow = null;
 
 const canvas = document.getElementById('galaxyCanvas');
@@ -40,6 +41,9 @@ function setLanguage(lang) {
   applyTranslations();
   if (liveState) {
     populateConversationsDropdown(liveState.conversations || [], liveState.activeConversationId);
+  }
+  if (selectedBall) {
+    selectOrbitNode(selectedBall);
   }
   renderUI();
 }
@@ -311,7 +315,7 @@ function renderUI() {
   document.getElementById('agentsChips').innerHTML = catalog.ring1Agents.map(ag => {
     const hits = Number(counts.agents[ag]) || 0;
     const act = ag === s.agent;
-    return `<span class="px-1.5 py-0.5 rounded text-xs font-mono border ${
+    return `<span data-node-name="${escapeHtml(ag)}" data-node-ring="Ring 1" data-node-hits="${hits}" class="px-1.5 py-0.5 rounded text-xs font-mono border cursor-pointer hover:border-purple-400 transition ${
       act ? 'bg-purple-600 text-white border-purple-300 font-bold' : 'bg-[#11172b] text-slate-400 border-slate-800'
     }">${escapeHtml(ag)} (${hits}x)</span>`;
   }).join('');
@@ -320,16 +324,80 @@ function renderUI() {
   let skHtml = catalog.ring2Skills.map(sk => {
     const hits = Number(counts.skills[sk]) || 0;
     const act = sk === s.skill;
-    return `<span class="px-1.5 py-0.5 rounded text-xs font-mono border ${
+    return `<span data-node-name="${escapeHtml(sk)}" data-node-ring="Ring 2" data-node-hits="${hits}" class="px-1.5 py-0.5 rounded text-xs font-mono border cursor-pointer hover:border-cyan-400 transition ${
       act ? 'bg-cyan-600 text-white border-cyan-300 font-bold' : 'bg-[#11172b] text-slate-400 border-slate-800'
     }">${escapeHtml(sk)} (${hits}x)</span>`;
   }).join('');
   if (showOnDemand && s.isOnDemandSkill) {
     const odHits = Number(counts.skills[s.skill]) || 1;
-    skHtml += `<span class="px-1.5 py-0.5 rounded text-xs font-mono border bg-amber-500/20 text-amber-300 border-amber-400 font-bold">★ ${escapeHtml(s.skill)} (${odHits}x)</span>`;
+    skHtml += `<span data-node-name="${escapeHtml(s.skill)}" data-node-ring="Ring 4" data-node-hits="${odHits}" class="px-1.5 py-0.5 rounded text-xs font-mono border cursor-pointer bg-amber-500/20 text-amber-300 border-amber-400 font-bold">★ ${escapeHtml(s.skill)} (${odHits}x)</span>`;
   }
   document.getElementById('skillsChips').innerHTML = skHtml;
 }
+
+function selectOrbitNode(node) {
+  if (!node || !node.name) return;
+  selectedBall = node;
+  const card = document.getElementById('nodeInspectorCard');
+  const titleEl = document.getElementById('nodeInspectorTitle');
+  const badgeEl = document.getElementById('nodeInspectorBadge');
+  const descEl = document.getElementById('nodeInspectorDesc');
+  if (!card || !titleEl || !badgeEl || !descEl) return;
+
+  const isAgent = node.ring === 'Ring 1' || node.ring === 'Ring 3';
+  const icon = isAgent ? '🤖' : '⚡';
+  const ringMapPt = {
+    'Ring 1': '● Anel 1: Agent Pré-carregado',
+    'Ring 2': '● Anel 2: Skill Pré-carregada',
+    'Ring 3': '★ Anel 3: Agent Sob Demanda',
+    'Ring 4': '★ Anel 4: Skill Sob Demanda'
+  };
+  const ringMapEn = {
+    'Ring 1': '● Ring 1: Preloaded Agent',
+    'Ring 2': '● Ring 2: Preloaded Skill',
+    'Ring 3': '★ Ring 3: On-Demand Agent',
+    'Ring 4': '★ Ring 4: On-Demand Skill'
+  };
+  const localizedRing = currentLang === 'pt'
+    ? (ringMapPt[node.ring] || node.ring)
+    : (ringMapEn[node.ring] || node.ring);
+
+  const catalogDescs = (liveState && liveState.catalog && liveState.catalog.descriptions) || { skills: {}, agents: {} };
+  const rawEnDesc = isAgent
+    ? (catalogDescs.agents && catalogDescs.agents[node.name]) || ''
+    : (catalogDescs.skills && catalogDescs.skills[node.name]) || '';
+
+  const summary = typeof window.getLocalizedNodeDescription === 'function'
+    ? window.getLocalizedNodeDescription(node.name, localizedRing, rawEnDesc, currentLang)
+    : (rawEnDesc || node.name);
+
+  titleEl.textContent = `${icon} ${node.name}`;
+  badgeEl.textContent = `${localizedRing} · ${Number(node.hits) || 0} ${t('usesWord')}`;
+  descEl.textContent = summary;
+  card.style.display = 'block';
+}
+
+function closeNodeInspector() {
+  selectedBall = null;
+  const card = document.getElementById('nodeInspectorCard');
+  if (card) {
+    card.style.display = 'none';
+  }
+}
+
+['agentsChips', 'skillsChips'].forEach(containerId => {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.addEventListener('click', e => {
+    const chip = e.target.closest('[data-node-name]');
+    if (!chip) return;
+    selectOrbitNode({
+      name: chip.getAttribute('data-node-name'),
+      ring: chip.getAttribute('data-node-ring') || 'Ring 2',
+      hits: Number(chip.getAttribute('data-node-hits')) || 0
+    });
+  });
+});
 
 canvas.addEventListener('mousemove', e => {
   const r = canvas.getBoundingClientRect();
@@ -343,6 +411,18 @@ canvas.addEventListener('mousemove', e => {
   } else {
     hb.textContent = t('hoverPrompt');
     hb.className = 'px-2.5 py-0.5 rounded bg-slate-900 border border-slate-700 text-cyan-300 font-mono';
+  }
+});
+
+canvas.addEventListener('click', e => {
+  const r = canvas.getBoundingClientRect();
+  const mx = (e.clientX - r.left) * (canvas.width / r.width);
+  const my = (e.clientY - r.top) * (canvas.height / r.height);
+  const clicked = hitZones.find(z => Math.hypot(mx - z.x, my - z.y) < z.rad + 7) || null;
+  if (clicked) {
+    selectOrbitNode(clicked);
+  } else {
+    closeNodeInspector();
   }
 });
 
@@ -362,6 +442,7 @@ function drawOrbitRing(items, radius, speed, baseColor, activeColor, activeName,
     const y = cy + Math.sin(a) * radius;
     const isAct = name === activeName || (Array.isArray(extraActiveList) && extraActiveList.includes(name));
     const isHov = hoveredBall && hoveredBall.name === name;
+    const isSel = selectedBall && selectedBall.name === name;
     const hits = (countMap && countMap[name]) || 0;
 
     hitZones.push({ x, y, rad: ballSize + 3, name, ring: ringLabel, hits });
@@ -388,15 +469,23 @@ function drawOrbitRing(items, radius, speed, baseColor, activeColor, activeName,
       ctx.stroke();
     }
 
-    ctx.fillStyle = isAct || isHov ? activeColor : baseColor;
-    ctx.strokeStyle = isAct || isHov ? '#ffffff' : activeColor;
-    ctx.lineWidth = isAct || isHov ? 2.2 : 0.8;
+    if (isSel) {
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      ctx.arc(x, y, ballSize + 8, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    ctx.fillStyle = isAct || isHov || isSel ? activeColor : baseColor;
+    ctx.strokeStyle = isAct || isHov || isSel ? '#ffffff' : activeColor;
+    ctx.lineWidth = isAct || isHov || isSel ? 2.2 : 0.8;
     ctx.beginPath();
-    ctx.arc(x, y, isAct || isHov ? ballSize + 4.5 : ballSize, 0, Math.PI * 2);
+    ctx.arc(x, y, isAct || isHov || isSel ? ballSize + 4.5 : ballSize, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
 
-    if (isAct || isHov) {
+    if (isAct || isHov || isSel) {
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 12px monospace';
       ctx.textAlign = 'center';

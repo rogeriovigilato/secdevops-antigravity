@@ -118,6 +118,18 @@
         </div>
 
         <canvas id="galaxyCanvas" width="780" height="450" class="w-full h-[430px] rounded-lg cursor-crosshair"></canvas>
+
+        <!-- Clicked Sphere / Chip Summary Inspector Card -->
+        <div id="nodeInspectorCard" style="display: none;" class="bg-[#0b0f1d] border border-cyan-500/60 rounded-xl p-3 shadow-lg transition-all">
+          <div class="flex items-center justify-between gap-2 mb-1">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span id="nodeInspectorTitle" class="text-sm font-bold text-cyan-300 font-mono"></span>
+              <span id="nodeInspectorBadge" class="text-[11px] px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-400/40 font-mono"></span>
+            </div>
+            <button type="button" onclick="closeNodeInspector()" class="text-xs font-bold text-slate-400 hover:text-white px-2 py-0.5 rounded bg-slate-800 hover:bg-rose-600 transition cursor-pointer">✕</button>
+          </div>
+          <p id="nodeInspectorDesc" class="text-xs leading-relaxed text-slate-200"></p>
+        </div>
       </div>
 
       <!-- Right Side: Thinking + Token Peaks + Preloaded Chips -->
