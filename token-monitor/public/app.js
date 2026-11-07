@@ -2,7 +2,8 @@
 
 let currentLang = 'pt';
 let showOnDemand = true;
-let autoWalk = true;
+let liveFollow = true;
+let userPinnedConvId = null;
 let liveState = null;
 let currentStepIdx = 0;
 let tick = 0;
@@ -45,7 +46,8 @@ function setLanguage(lang) {
 
 function toggleOnDemand() {
   showOnDemand = !showOnDemand;
-  currentStepIdx = 0;
+  const steps = getFilteredSteps();
+  currentStepIdx = liveFollow && steps.length > 0 ? steps.length - 1 : 0;
   pulse = 0;
   document.getElementById('legRing3').className = showOnDemand ? '' : 'hidden';
   document.getElementById('legRing4').className = showOnDemand ? '' : 'hidden';
@@ -62,23 +64,46 @@ function escapeHtml(raw) {
 }
 
 function toggleAutoWalk() {
-  autoWalk = !autoWalk;
+  liveFollow = !liveFollow;
+  if (liveFollow) {
+    const steps = getFilteredSteps();
+    if (steps.length > 0) {
+      currentStepIdx = steps.length - 1;
+      pulse = 0;
+    }
+    fetchState(userPinnedConvId || undefined, true);
+  }
   applyTranslations();
+  renderUI();
+}
+
+function inspectStep(idx) {
+  const steps = getFilteredSteps();
+  if (steps.length === 0) return;
+  liveFollow = false;
+  currentStepIdx = Math.max(0, Math.min(idx, steps.length - 1));
+  pulse = 0;
+  applyTranslations();
+  renderUI();
 }
 
 function stepBackward() {
   const steps = getFilteredSteps();
   if (steps.length === 0) return;
+  liveFollow = false;
   currentStepIdx = (currentStepIdx - 1 + steps.length) % steps.length;
   pulse = 0;
+  applyTranslations();
   renderUI();
 }
 
 function stepForward() {
   const steps = getFilteredSteps();
   if (steps.length === 0) return;
+  liveFollow = false;
   currentStepIdx = (currentStepIdx + 1) % steps.length;
   pulse = 0;
+  applyTranslations();
   renderUI();
 }
 
@@ -89,7 +114,11 @@ function applyTranslations() {
   document.getElementById('btnToggleOD').className = showOnDemand
     ? 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-400/50 hover:bg-amber-500/30 transition'
     : 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-400/50 hover:bg-cyan-500/30 transition';
-  document.getElementById('btnAuto').textContent = autoWalk ? t('autoWalkOn') : t('autoWalkOff');
+  const btnAuto = document.getElementById('btnAuto');
+  btnAuto.textContent = liveFollow ? t('autoWalkOn') : t('autoWalkOff');
+  btnAuto.className = liveFollow
+    ? 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-400/50 hover:bg-emerald-500/30 transition'
+    : 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 transition';
   const btnPrev = document.getElementById('btnPrev');
   if (btnPrev) btnPrev.textContent = t('prevStep');
   const btnRefresh = document.getElementById('btnRefreshConv');
@@ -121,6 +150,8 @@ function applyTranslations() {
 async function fetchState(convId, jumpToLatest = false) {
   try {
     const isFirstLoad = !liveState;
+    const prevActiveId = liveState ? liveState.activeConversationId : null;
+    const prevStepCount = getFilteredSteps().length;
     const query = convId ? `?conv=${encodeURIComponent(convId)}` : '';
     const res = await fetch(`/api/state${query}`);
     if (!res.ok) return;
@@ -128,8 +159,13 @@ async function fetchState(convId, jumpToLatest = false) {
     liveState = data;
     populateConversationsDropdown(data.conversations || [], data.activeConversationId);
     const steps = getFilteredSteps();
-    if (steps.length > 0 && (isFirstLoad || jumpToLatest || currentStepIdx >= steps.length)) {
-      currentStepIdx = steps.length - 1;
+    const hasNewActivity = data.activeConversationId !== prevActiveId || steps.length !== prevStepCount;
+    if (steps.length > 0 && (isFirstLoad || jumpToLatest || liveFollow || currentStepIdx >= steps.length)) {
+      const latestIdx = steps.length - 1;
+      if (currentStepIdx !== latestIdx || hasNewActivity) {
+        pulse = 0;
+      }
+      currentStepIdx = latestIdx;
     }
     renderUI();
   } catch {
@@ -152,7 +188,7 @@ function populateConversationsDropdown(convs, activeId) {
 }
 
 function onSelectConversation(convId) {
-  currentStepIdx = 0;
+  userPinnedConvId = convId || null;
   fetchState(convId, true);
 }
 
@@ -161,6 +197,9 @@ async function refreshConversations() {
   if (btn) {
     btn.textContent = t('refreshedBtn');
   }
+  userPinnedConvId = null;
+  liveFollow = true;
+  applyTranslations();
   await fetchState(undefined, true);
   if (btn) {
     setTimeout(() => {
@@ -249,7 +288,7 @@ function renderUI() {
     const icon = getStepActionIcon(st);
     const tip = `${t('stepWord')} #${realIdx + 1} | ${deltaLabel} ${t('newTokensShort')} (${t('totalContextShort')}: ${Math.round(st.totalStepTokens / 1000)}k) | ${st.tool} → ${st.skill}`;
 
-    return `<div onclick="currentStepIdx=${realIdx};pulse=0;renderUI();" title="${escapeHtml(tip)}" class="flex flex-col items-center cursor-pointer group">
+    return `<div onclick="inspectStep(${realIdx});" title="${escapeHtml(tip)}" class="flex flex-col items-center cursor-pointer group">
       <div class="text-xs font-mono leading-tight mb-1 ${act ? 'text-amber-300 font-bold' : 'text-slate-300'}">${deltaLabel}</div>
       <div class="w-full bg-[#11172b] rounded-t-md overflow-hidden flex items-end border ${act ? 'border-amber-400 shadow-sm' : 'border-slate-800'}" style="height:56px">
         <div class="${act ? 'bg-emerald-400' : 'bg-indigo-500/80 group-hover:bg-indigo-400'} w-full transition-all duration-300" style="height:${h}%"></div>
@@ -552,15 +591,8 @@ async function openCornerPopup() {
 }
 
 setInterval(() => {
-  if (autoWalk) {
-    stepForward();
-  }
-}, 4200);
-
-setInterval(() => {
-  const sel = document.getElementById('selConv');
-  fetchState(sel && sel.value ? sel.value : undefined);
-}, 5000);
+  fetchState(userPinnedConvId || undefined);
+}, 1500);
 
 applyTranslations();
 fetchState();

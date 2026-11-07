@@ -52,3 +52,10 @@ test('UI Regression: refresh button (#btnRefreshConv) exists next to session dro
   const appJs = fs.readFileSync(appJsPath, 'utf8');
   assert.match(appJs, /async function refreshConversations\(\)/);
 });
+
+test('UI Regression: real-time liveFollow mode tracks latest step without 4.2s slideshow jumping', () => {
+  const appJs = fs.readFileSync(appJsPath, 'utf8');
+  assert.match(appJs, /let liveFollow = true/);
+  assert.match(appJs, /function inspectStep\(/);
+  assert.doesNotMatch(appJs, /4200/);
+});
