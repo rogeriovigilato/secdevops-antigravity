@@ -37,6 +37,38 @@ Thanks to **Section 4 (`Mandatory Auto-Triggers & Delivery Gate`)** in `.agents/
 
 ---
 
+## 📊 Empirical Token Benchmark (Audited on Google Antigravity)
+
+Instead of relying on theoretical guesses, we benchmarked **Scenario A (Monolithic — all 82 skills, 30 agents, and rules active in `.agents/`)** against **Scenario B (Our 2-Tier Architecture — 15 preloaded skills, 11 core agents, `trigger: glob` language rules, and `common-secdevops-router.md`)** by inspecting the actual `input_tokens` recorded by Google Antigravity in `.system_generated/logs/transcript.jsonl`.
+
+### 1. Per-Turn System Prompt Overhead (Gemini BPE Tokenizer @ `5.42 bytes/token`)
+
+| Injected Layer per Turn | 🔴 Scenario A (Monolithic) | 🟢 Scenario B (2-Tier Orbital) | 💰 Real Audited Savings |
+| :--- | :---: | :---: | :---: |
+| **1. Antigravity Base Prompt** *(Native IDE + Tools)* | `~11,233 tokens` | `~11,233 tokens` | *Fixed IDE baseline* |
+| **2. Skills + Agents YAML Index** *(`<skills>` + `<subagents>`)* | **`7,428 tokens`** *(82 skills + 30 agents)* | **`1,650 tokens`** *(15 skills + 11 agents)* | **`-5,778 tokens/turn` (`-77.8%`)** |
+| **3. Active Rules** *(`<user_rules>` in `transcript.jsonl`)* | **`4,257 – 6,660 tokens`** *(18–32 rules)* | **`2,403 tokens`** *(5 core + Router)* | **`-1,854 to -4,257 tokens/turn` (`-43.6% to -64.0%`)** |
+| **🔥 Total Customization Weight / Turn** | **`11,685 – 14,088 tokens/turn`** | **`4,053 tokens/turn`** | **`-7,632 to -10,035 tokens/turn` (`-65.3% to -71.2%`)** |
+| **📈 Total Step #1 `input_tokens` Billed** | **`~22,918 – 25,321 tokens`** | **`14,311 – 15,286 tokens`** *(measured)* | **`~230k – 300k tokens saved per 30-turn chat`** |
+
+### 2. Controlled A/B Probe Sessions (`transcript.jsonl` Audit)
+
+We also ran twin 1-step subagent probes (`TypeName: "self"`, identical prompt: `"Responda apenas 'OK - Cenario A/B medido' sem chamar nenhuma ferramenta"`) to isolate dynamic `<user_rules>` reloading on disk alongside real workspace sessions:
+
+| Audited Session | Session ID | Active Profile | Step #1 `input_tokens` (`transcript.jsonl`) |
+| :--- | :---: | :--- | :---: |
+| **Main Workspace Session** | `55921528` | **Scenario B (2-Tier)** | **`14,311 tokens`** |
+| **Blind VLAN Auto-Trigger Subagent** | `96c5425b` | **Scenario B (2-Tier)** | **`14,968 tokens`** |
+| **Controlled Probe B** *(5 core rules + Router)* | `e4d1b9a1` | **Scenario B (2-Tier)** | **`15,286 tokens`** |
+| **Controlled Probe A** *(18 common rules `always_on`)* | `5f2f6a0a` | **Scenario A (Rules Only)** | **`17,140 tokens`** *(+1,854 tokens from rules alone)* |
+
+> **Key Engineering Takeaways:**
+> - **Preloaded vs. Catalog Disk Payload:** Preloaded `.agents/` drops from **`1,365 KB` (`82 skills / 30 agents`)** down to **`262 KB` (`-80.8%`)**.
+> - **Zero-Cost Workflows:** Custom slash workflows in `.agents/workflows/` (`0 tokens/turn`) stay dormant on disk until explicitly invoked via `/monitor` or `/command`.
+> - **Surgical On-Demand Loading:** Loading a specialist skill from Ring 4 (`skills/<name>/SKILL.md`) via `read_file` costs only **`~750–1,200 tokens` once** when needed, rather than taxing every turn of every conversation.
+
+---
+
 ## 🛰️ Antigravity Galaxy Mind & Token Radar (`token-monitor/`)
 
 This repository includes the **Antigravity Galaxy Mind & Token Radar** (`token-monitor/`), a real-time visual telemetry server (`http://127.0.0.1:4317`) with native **Document Picture-in-Picture (PiP)** support:
@@ -87,7 +119,7 @@ Architectural decisions, verified state, and roadmaps are maintained in `context
 ```text
 secdevops-antigravity/
 ├── .agents/                  # Preloaded 2-Tier Profile (15 skills, 11 agents, 7 workflows incl. /monitor, 20 rules)
-├── token-monitor/            # Official Galaxy Mind & Token Radar (127.0.0.1:4317 + 15 automated tests)
+├── token-monitor/            # Official Galaxy Mind & Token Radar (127.0.0.1:4317 + 16 automated tests)
 ├── context/                  # Architectural Context Ledger compatible with Obsidian Graph View
 ├── agents/                   # Full catalog of 30 specialized subagent definitions
 ├── skills/                   # Full catalog of 82 skills (SecDevOps, Homelab, Cloud, Backend, OSINT, TDD)
