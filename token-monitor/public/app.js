@@ -231,7 +231,10 @@ function renderUI() {
   const catalog = liveState.catalog;
   const locale = currentLang === 'pt' ? 'pt-BR' : 'en-US';
 
-  document.getElementById('valSkill').textContent = s.skill;
+  const skillDisplay = Array.isArray(s.activeSkills) && s.activeSkills.length > 1
+    ? s.activeSkills.join(' + ')
+    : s.skill;
+  document.getElementById('valSkill').textContent = skillDisplay;
   const skL = document.getElementById('valSkillLayer');
   skL.textContent = s.isOnDemandSkill ? t('layerOnDemandSkill') : t('layerPreloadedSkill');
   skL.className = s.isOnDemandSkill ? 'text-amber-400 font-semibold mt-0.5' : 'text-cyan-400 mt-0.5';
@@ -256,7 +259,7 @@ function renderUI() {
   const popThought = getPopupElement('popThought');
   const popTok = getPopupElement('popTok');
   const popCache = getPopupElement('popCache');
-  if (popSkill) popSkill.textContent = s.skill;
+  if (popSkill) popSkill.textContent = skillDisplay;
   if (popAgent) popAgent.textContent = s.agent;
   if (popThought) popThought.textContent = localizedThought;
   if (popTok) popTok.textContent = `${(s.totalStepTokens / 1000).toFixed(1)}k tok`;
