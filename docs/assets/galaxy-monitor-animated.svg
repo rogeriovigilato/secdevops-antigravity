@@ -76,7 +76,7 @@
   <rect x="871" y="82" width="273" height="68" rx="11" fill="#0b0f1d" stroke="#f59e0b" stroke-opacity="0.45"/>
   <text x="883" y="101" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="10.5">🪙 Token Pulse &amp; Context</text>
   <text x="883" y="122" fill="#fbbf24" font-family="Consolas, monospace" font-size="13.5" font-weight="700">83,240 tokens</text>
-  <text x="883" y="139" fill="#34d399" font-family="system-ui, sans-serif" font-size="10.5" font-weight="600">Cache Hit: 97% · Overhead Saved: &gt;85%</text>
+  <text x="883" y="139" fill="#34d399" font-family="system-ui, sans-serif" font-size="10.5" font-weight="600">Cache Hit: 97% · Custom Saved: -71%</text>
 
   <!-- Left Main Panel: Galaxy Orbit Canvas (740px wide) -->
   <rect x="16" y="162" width="740" height="492" rx="12" fill="#070a14" stroke="#1e293b"/>

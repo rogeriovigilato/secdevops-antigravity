@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <strong>2-Tier Agent Architecture (&gt;85% Token Savings) • Step #1 Auto-Trigger Router • Real-Time Galaxy Mind &amp; Token Radar (PiP) • Obsidian Context Graph</strong>
+  <strong>2-Tier Agent Architecture (-65% to -71% Customization Overhead • -37% to -40% Step #1 Input Tokens) • Step #1 Auto-Trigger Router • Real-Time Galaxy Mind &amp; Token Radar (PiP) • Obsidian Context Graph</strong>
 </p>
 
 ---
@@ -49,7 +49,7 @@ Instead of relying on theoretical guesses, we benchmarked **Scenario A (Monolith
 | **2. Skills + Agents YAML Index** *(`<skills>` + `<subagents>`)* | **`7,428 tokens`** *(82 skills + 30 agents)* | **`1,650 tokens`** *(15 skills + 11 agents)* | **`-5,778 tokens/turn` (`-77.8%`)** |
 | **3. Active Rules** *(`<user_rules>` in `transcript.jsonl`)* | **`4,257 – 6,660 tokens`** *(18–32 rules)* | **`2,403 tokens`** *(5 core + Router)* | **`-1,854 to -4,257 tokens/turn` (`-43.6% to -64.0%`)** |
 | **🔥 Total Customization Weight / Turn** | **`11,685 – 14,088 tokens/turn`** | **`4,053 tokens/turn`** | **`-7,632 to -10,035 tokens/turn` (`-65.3% to -71.2%`)** |
-| **📈 Total Step #1 `input_tokens` Billed** | **`~22,918 – 25,321 tokens`** | **`14,311 – 15,286 tokens`** *(measured)* | **`~230k – 300k tokens saved per 30-turn chat`** |
+| **📈 Total Step #1 `input_tokens` Billed** | **`~22,918 – 25,321 tokens`** *(composite)* | **`14,311 – 15,286 tokens`** *(measured)* | **`-37.5% to -39.6% per call` (`~230k – 300k tokens saved / 30 turns`)** |
 
 ### 2. Controlled A/B Probe Sessions (`transcript.jsonl` Audit)
 
@@ -62,8 +62,14 @@ We also ran twin 1-step subagent probes (`TypeName: "self"`, identical prompt: `
 | **Controlled Probe B** *(5 core rules + Router)* | `e4d1b9a1` | **Scenario B (2-Tier)** | **`15,286 tokens`** |
 | **Controlled Probe A** *(18 common rules `always_on`)* | `5f2f6a0a` | **Scenario A (Rules Only)** | **`17,140 tokens`** *(+1,854 tokens from rules alone)* |
 
+### 3. Methodology Notes: Composite vs. Measured Baseline & End-to-End Task Budget
+
+- **Why Scenario A Combines Live Measurement + BPE Accounting:** The Google Antigravity IDE host caches the `<skills>` and `<subagents>` index at window startup while dynamically reloading `<user_rules>` from disk on each subagent invocation (`15,286` vs. `17,140 tokens` measured directly in `transcript.jsonl`). The full Scenario A customization overhead (`11,685 – 14,088 tokens/turn`) therefore sums the measured `<user_rules>` delta with the exact BPE token weight (`5.42 bytes/token`) of all 82 skills and 30 agents.
+- **Customization Savings (`-65.3% to -71.2%`) vs. Total Step #1 Call Savings (`-37.5% to -39.6%`):** Because Antigravity's native IDE base prompt (`~11,233 tokens`) is fixed on every call, cutting customization overhead by `7,632 – 10,035 tokens/turn` translates to a **`37.5% – 39.6%` reduction in total billed `input_tokens` on Step #1** (`~22.9k–25.3k` ➔ `14.3k–15.3k`).
+- **Single-Step Probe vs. Multi-Step Task Budget (Lazy-Loading Trade-off):** Calling `read_file` on Step #1 to load 1–2 specialist skills from Ring 4 adds one tool-call round-trip plus `~750–1,200 tokens` per `SKILL.md` into the conversation history. Even accounting for that extra turn (`~1.5k–2.4k tokens` for domain skills), an end-to-end multi-step task still saves **`~5,000+ tokens` per subsequent turn** compared to paying the monolithic `11.6k–14.0k` catalog tax on every step through testing and code review.
+
 > **Key Engineering Takeaways:**
-> - **Preloaded vs. Catalog Disk Payload:** Preloaded `.agents/` drops from **`1,365 KB` (`82 skills / 30 agents`)** down to **`262 KB` (`-80.8%`)**.
+> - **Preloaded vs. Catalog Disk Payload:** Preloaded `.agents/` drops from **`1,365 KB` (`82 skills / 30 agents`)** down to **`262 KB` (`-80.8%` disk footprint)**.
 > - **Zero-Cost Workflows:** Custom slash workflows in `.agents/workflows/` (`0 tokens/turn`) stay dormant on disk until explicitly invoked via `/monitor` or `/command`.
 > - **Surgical On-Demand Loading:** Loading a specialist skill from Ring 4 (`skills/<name>/SKILL.md`) via `read_file` costs only **`~750–1,200 tokens` once** when needed, rather than taxing every turn of every conversation.
 
