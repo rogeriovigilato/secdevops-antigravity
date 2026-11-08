@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <strong>2-Tier Agent Architecture (-65% to -71% Customization Overhead • -37% to -40% Step #1 Input Tokens) • Step #1 Auto-Trigger Router • Real-Time Galaxy Mind &amp; Token Radar (PiP) • Obsidian Context Graph</strong>
+  <strong>2-Tier Agent Architecture (-67.4% Customization Overhead • -35.1% Step #1 Input Tokens • -30.4% Multi-Step Task Budget) • Real-Time Galaxy Mind &amp; Token Radar (PiP)</strong>
 </p>
 
 ---
@@ -37,41 +37,44 @@ Thanks to **Section 4 (`Mandatory Auto-Triggers & Delivery Gate`)** in `.agents/
 
 ---
 
-## 📊 Empirical Token Benchmark (Audited on Google Antigravity)
+## 📊 Empirical Token Benchmark (100% Live-Measured in `transcript.jsonl`)
 
-Instead of relying on theoretical guesses, we benchmarked **Scenario A (Monolithic — all 82 skills, 30 agents, and rules active in `.agents/`)** against **Scenario B (Our 2-Tier Architecture — 15 preloaded skills, 11 core agents, `trigger: glob` language rules, and `common-secdevops-router.md`)** by inspecting the actual `input_tokens` recorded by Google Antigravity in `.system_generated/logs/transcript.jsonl`.
+Instead of relying on theoretical estimates or composite sums, we ran **controlled multi-run ($N = 3$) end-to-end benchmarks** directly inside Google Antigravity, comparing **Scenario A (Monolithic — all 82 skills, 30 subagents, and 19 rules injected into the active prompt)** against **Scenario B (Our 2-Tier Orbital Architecture — 15 preloaded skills, 11 core agents, `trigger: glob` language rules, and `common-secdevops-router.md`)** and reading the exact token counters recorded by the runtime in `.system_generated/logs/transcript.jsonl`.
 
-### 1. Per-Turn System Prompt Overhead (Gemini BPE Tokenizer @ `5.42 bytes/token`)
+### 1. Per-Turn System Prompt Overhead (Live-Measured Step #1 Breakdown)
 
-| Injected Layer per Turn | 🔴 Scenario A (Monolithic) | 🟢 Scenario B (2-Tier Orbital) | 💰 Real Audited Savings |
+| Injected Layer per Turn | 🔴 Scenario A (Monolithic Measured) | 🟢 Scenario B (2-Tier Measured) | 💰 Exact Measured Savings |
 | :--- | :---: | :---: | :---: |
-| **1. Antigravity Base Prompt** *(Native IDE + Tools)* | `~11,233 tokens` | `~11,233 tokens` | *Fixed IDE baseline* |
-| **2. Skills + Agents YAML Index** *(`<skills>` + `<subagents>`)* | **`7,428 tokens`** *(82 skills + 30 agents)* | **`1,650 tokens`** *(15 skills + 11 agents)* | **`-5,778 tokens/turn` (`-77.8%`)** |
-| **3. Active Rules** *(`<user_rules>` in `transcript.jsonl`)* | **`4,257 – 6,660 tokens`** *(18–32 rules)* | **`2,403 tokens`** *(5 core + Router)* | **`-1,854 to -4,257 tokens/turn` (`-43.6% to -64.0%`)** |
-| **🔥 Total Customization Weight / Turn** | **`11,685 – 14,088 tokens/turn`** | **`4,053 tokens/turn`** | **`-7,632 to -10,035 tokens/turn` (`-65.3% to -71.2%`)** |
-| **📈 Total Step #1 `input_tokens` Billed** | **`~22,918 – 25,321 tokens`** *(composite)* | **`14,311 – 15,286 tokens`** *(measured)* | **`-37.5% to -39.6% per call` (`~230k – 300k tokens saved / 30 turns`)** |
+| **1. Antigravity Base Prompt** *(Native IDE + Tools + Task)* | `11,082 tokens` | `11,082 tokens` | *Fixed IDE & prompt baseline* |
+| **2. Active Customization Payload** *(82 Skills + 30 Agents + Rules)* | **`12,061 tokens/turn`** | **`3,931 tokens/turn`** | **`-8,130 tokens/turn` (`-67.4%`)** |
+| **📈 Total Step #1 Prompt Tokens (`input_tokens`)** | **`23,143 tokens`** *(mean, $N=3$)* | **`15,013 tokens`** *(mean, $N=3$)* | **`-8,130 tokens/call` (`-35.1%`)** |
 
-### 2. Controlled A/B Probe Sessions (`transcript.jsonl` Audit)
+### 2. End-to-End Completed Task Benchmark ($N = 3$ Multi-Step Runs per Scenario)
 
-We also ran twin 1-step subagent probes (`TypeName: "self"`, identical prompt: `"Responda apenas 'OK - Cenario A/B medido' sem chamar nenhuma ferramenta"`) to isolate dynamic `<user_rules>` reloading on disk alongside real workspace sessions:
+To measure the **real budget per completed task** (including the cost of `read_file` loading `homelab-vlan-segmentation` and `cisco-ios-patterns` on Step #1 and generating the complete hardened Cisco IOS VLAN/ACL/DHCP-Snooping/Port-Security configuration on Step #2):
 
-| Audited Session | Session ID | Active Profile | Step #1 `input_tokens` (`transcript.jsonl`) |
-| :--- | :---: | :--- | :---: |
-| **Main Workspace Session** | `55921528` | **Scenario B (2-Tier)** | **`14,311 tokens`** |
-| **Blind VLAN Auto-Trigger Subagent** | `96c5425b` | **Scenario B (2-Tier)** | **`14,968 tokens`** |
-| **Controlled Probe B** *(5 core rules + Router)* | `e4d1b9a1` | **Scenario B (2-Tier)** | **`15,286 tokens`** |
-| **Controlled Probe A** *(18 common rules `always_on`)* | `5f2f6a0a` | **Scenario A (Rules Only)** | **`17,140 tokens`** *(+1,854 tokens from rules alone)* |
+| Scenario & Run ID (`transcript.jsonl`) | Step #1 Prompt (`input + cache`) | Step #2 Prompt (`after 2x read_file`) | Cumulative Task Prompt Tokens | Uncached New `input_tokens` | Output Tokens |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| 🟢 **Scenario B — Run 1 (`f6018ce4`)** | `15,016` | `22,001` *(+6,984 skill fetch)* | `37,017` | `22,000` | `1,532` |
+| 🟢 **Scenario B — Run 2 (`c5f3e20f`)** | `15,012` | `22,157` *(+7,144 skill fetch)* | `37,169` | `22,156` | `2,631` |
+| 🟢 **Scenario B — Run 3 (`cddd7aad`)** | `15,012` | `22,014` *(+7,001 skill fetch)* | `37,026` | `22,013` | `2,118` |
+| **🟢 Scenario B Mean ($N = 3$)** | **`15,013 tokens`** | **`22,057 tokens`** | **`37,071 tokens`** | **`22,056 tokens`** | **`2,094 tokens`** |
+| 🔴 **Scenario A — Run 1 (`5363df44`)** | `23,145` | `30,090` *(+6,944 skill fetch)* | `53,235` | `30,089` | `1,918` |
+| 🔴 **Scenario A — Run 2 (`2892b0ae`)** | `23,141` | `30,161` *(+7,019 skill fetch)* | `53,302` | `30,160` | `2,740` |
+| 🔴 **Scenario A — Run 3 (`90c67441`)** | `23,143` | `30,152` *(+7,009 skill fetch)* | `53,295` | `11,113` *(warm cache)* | `2,907` |
+| **🔴 Scenario A Mean ($N = 3$)** | **`23,143 tokens`** | **`30,134 tokens`** | **`53,277 tokens`** | **`30,125 tokens` *(cold)*** | **`2,522 tokens`** |
+| **💰 Exact Multi-Step Task Savings (B vs. A)** | **`-8,130` (`-35.1%`)** | **`-8,077` (`-26.8%`)** | **`-16,206 tokens` (`-30.4%`)** | **`-8,069 tokens` (`-26.8%`)** | — |
 
-### 3. Methodology Notes: Composite vs. Measured Baseline & End-to-End Task Budget
+### 3. Single-Step Monolithic ($N = 3$) vs. Multi-Step On-Demand Trade-off
 
-- **Why Scenario A Combines Live Measurement + BPE Accounting:** The Google Antigravity IDE host caches the `<skills>` and `<subagents>` index at window startup while dynamically reloading `<user_rules>` from disk on each subagent invocation (`15,286` vs. `17,140 tokens` measured directly in `transcript.jsonl`). The full Scenario A customization overhead (`11,685 – 14,088 tokens/turn`) therefore sums the measured `<user_rules>` delta with the exact BPE token weight (`5.42 bytes/token`) of all 82 skills and 30 agents.
-- **Customization Savings (`-65.3% to -71.2%`) vs. Total Step #1 Call Savings (`-37.5% to -39.6%`):** Because Antigravity's native IDE base prompt (`~11,233 tokens`) is fixed on every call, cutting customization overhead by `7,632 – 10,035 tokens/turn` translates to a **`37.5% – 39.6%` reduction in total billed `input_tokens` on Step #1** (`~22.9k–25.3k` ➔ `14.3k–15.3k`).
-- **Single-Step Probe vs. Multi-Step Task Budget (Lazy-Loading Trade-off):** Calling `read_file` on Step #1 to load 1–2 specialist skills from Ring 4 adds one tool-call round-trip plus `~750–1,200 tokens` per `SKILL.md` into the conversation history. Even accounting for that extra turn (`~1.5k–2.4k tokens` for domain skills), an end-to-end multi-step task still saves **`~5,000+ tokens` per subsequent turn** compared to paying the monolithic `11.6k–14.0k` catalog tax on every step through testing and code review.
+What if Scenario A answers in **1 single step** without calling `read_file` (`c101b2fb`: `23,125 tokens`, `25abaf2b`: `23,124 tokens`, mean **`23,125 tokens`**), while Scenario B spends **2 steps** to fetch the 2 domain skills via `read_file`?
+- **Cold Uncached `input_tokens` Billed:** Scenario B (`2 steps`, **`22,056 new input_tokens`**) still bills **`1,069 fewer new input_tokens` (`-4.6%`)** than a 1-step Monolithic call (**`23,125 new input_tokens`**), because Step #2 in Scenario B hits the Gemini prompt cache (`15,014 cache_read_tokens`, `68%` cache hit) and only bills `+7,043` new tokens for the two `SKILL.md` files!
+- **Multi-Turn Scaling:** From Turn 2 onward, every additional step (testing, `code-reviewer`, git workflow) saves **`8,130 prompt tokens` per turn** in Scenario B (`~243,900 tokens` saved over a 30-turn engineering session).
 
 > **Key Engineering Takeaways:**
 > - **Preloaded vs. Catalog Disk Payload:** Preloaded `.agents/` drops from **`1,365 KB` (`82 skills / 30 agents`)** down to **`262 KB` (`-80.8%` disk footprint)**.
 > - **Zero-Cost Workflows:** Custom slash workflows in `.agents/workflows/` (`0 tokens/turn`) stay dormant on disk until explicitly invoked via `/monitor` or `/command`.
-> - **Surgical On-Demand Loading:** Loading a specialist skill from Ring 4 (`skills/<name>/SKILL.md`) via `read_file` costs only **`~750–1,200 tokens` once** when needed, rather than taxing every turn of every conversation.
+> - **Surgical On-Demand Loading:** Fetching 2 specialist skills via `read_file` adds **`~7,043 tokens` once**, which is still smaller than the **`8,130 tokens/turn`** tax of keeping all 82 skills and 30 agents permanently in the system prompt.
 
 ---
 
