@@ -1,9 +1,9 @@
 # 02 - Architectural & Operational Decisions
 
 ## ADR-001: Two-Tier Low-Token Architecture (Preloaded 15 + On-Demand 67)
-- **Context:** Loading all 82 skills and 30 agents into `.agents/` consumes ~3,800+ tokens on every turn.
+- **Context:** Keeping all 82 skills, 30 agents, and the 19 curated rules in the active prompt costs a measured **12,061 customization tokens per turn** (**23,143 total Step #1 prompt tokens**), per the 2026-11-08 `transcript.jsonl` benchmark in `benchmarks/`.
 - **Decision:** Preload only 15 high-frequency skills and 11 core agents in `.agents/`, and index the remaining 67 skills in `rules/common/secdevops-router.md` for on-demand `read_file` loading.
-- **Consequence:** >85% reduction in per-message system prompt overhead with zero loss of capability.
+- **Consequence:** Reduces the customization payload to **3,931 tokens/turn** (**-67.4%**, **-8,130 tokens/turn**) and the total Step #1 prompt to **15,013 tokens** (**-35.1%**). Specialist coverage is preserved because the other 67 skills remain reachable through the on-demand router.
 
 ## ADR-002: Public, Versioned `context/` with Post-Verification Update Gate
 - **Status:** Revised 2026-11-09 (supersedes the original "strictly local" decision).
@@ -22,6 +22,6 @@
 - **Consequence:** Fresh clones carry no machine-specific state. `doctor.js` exits 0 with no install-state present ("not installed" is the accurate state for a source repository). `repair.js`/`uninstall.js` become no-ops instead of acting on stale scope. Re-running the installer is a deliberate full-profile operation, not part of routine diagnostics.
 
 ## ADR-005: ECC Runtime Is Vendored
-- **Context:** `scripts/`, `manifests/`, and `hooks/` (318 files, ~2.84 MB) are inherited from the ECC installer runtime, pinned at `ecc-universal@2.2.3` (see `docs/ANTIGRAVITY-GUIDE.md`).
+- **Context:** `scripts/` (318 files, ~2.84 MB) plus `manifests/` and `hooks/` (19 files, ~0.18 MB) are inherited from the ECC installer runtime, pinned at `ecc-universal@2.2.3` (see `docs/ANTIGRAVITY-GUIDE.md`).
 - **Decision:** Keep the runtime vendored in this repository rather than consuming it as an external dependency. Authorship and update rules are delimited in `docs/UPSTREAM.md`.
 - **Consequence:** Clones are self-contained; upstream updates must be applied deliberately and verified against the published test suite.

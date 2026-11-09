@@ -28,7 +28,7 @@ The pinned upstream version is `ecc-universal@2.2.3`. The install-state schema i
 
 ## Scripts actually used by this project's flow
 
-- `scripts/install-apply.js` — regenerates `.agents/` from `rules/`, `agents/`, `commands/` and rewrites the local install-state (see `package.json` → `install:antigravity`).
+- `scripts/install-apply.js` — regenerates `.agents/` from `rules/`, `agents/`, `commands/` and rewrites the local install-state (run it directly: `node scripts/install-apply.js --target antigravity`; this repository does not expose an npm `install:antigravity` script).
 - `scripts/doctor.js` — health diagnostics (`doctor:antigravity`); reads the local install-state when present and verifies managed-file hashes.
 - `scripts/repair.js` — reconciles managed files and install-state when drift is detected.
 - `scripts/uninstall.js` — removes managed files recorded in the install-state.
