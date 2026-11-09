@@ -1,5 +1,12 @@
 # Antigravity Setup and Usage Guide
 
+> **Upstream reference (ECC):** This guide was inherited from the ECC project
+> (`ecc-universal@2.2.3`). Commands below use `$ECC_ROOT`/`$EccRoot` as
+> placeholders for an ECC source checkout. In this repository the runtime is
+> vendored at the repository root: run the commands from the clone root and
+> replace those placeholders with `.` (or omit the prefix). See
+> `docs/UPSTREAM.md` for the authorship boundary and update procedure.
+
 Google Antigravity 2.0 discovers workspace customizations from the project-local
 `.agents/` directory. ECC's Antigravity target installs native rules, workflows,
 skills, and custom agents into that directory.

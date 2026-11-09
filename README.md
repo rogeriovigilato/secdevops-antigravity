@@ -41,6 +41,8 @@ Thanks to **Section 4 (`Mandatory Auto-Triggers & Delivery Gate`)** in `.agents/
 
 Instead of relying on theoretical estimates or composite sums, we ran **controlled multi-run ($N = 3$) end-to-end benchmarks** directly inside Google Antigravity, comparing **Scenario A (Monolithic — all 82 skills, 30 subagents, and 19 rules injected into the active prompt)** against **Scenario B (Our 2-Tier Orbital Architecture — 15 preloaded skills, 11 core agents, `trigger: glob` language rules, and `common-secdevops-router.md`)** and reading the exact token counters recorded by the runtime in `.system_generated/logs/transcript.jsonl`.
 
+> **Reproducibility note:** these measurements were captured from local Antigravity runtime transcripts (`.system_generated/logs/transcript.jsonl`), which are **not distributed with this repository**. The run IDs document provenance, but third parties must collect their own transcripts to reproduce the numbers.
+
 ### 1. Per-Turn System Prompt Overhead (Live-Measured Step #1 Breakdown)
 
 | Injected Layer per Turn | 🔴 Scenario A (Monolithic Measured) | 🟢 Scenario B (2-Tier Measured) | 💰 Exact Measured Savings |
@@ -153,6 +155,12 @@ secdevops-antigravity/
    ```bash
    node --test token-monitor/test/*.test.js
    ```
+4. **Bootstrap dependencies (installer only):**
+   `doctor.js` and the token-monitor test suite run **without** external dependencies. The installer (`scripts/install-apply.js`) imports `js-yaml`/`ajv`, so on a fresh clone run `npm install` first — or use `install.ps1`/`install.sh`, which install dependencies automatically. Requires Node >= 18.
+   ```bash
+   npm install
+   ```
+   No pre-defined absolute path is required: all tooling resolves relative to the repository root, with optional overrides via `AGY_PRELOADED_ROOT`, `AGY_CATALOG_ROOT`, `AGY_MONITOR_PORT`, `AGY_MONITOR_DIR`, `AGY_MEMORY_VAULT`, and `AGY_NODE_BIN`.
 
 ---
 

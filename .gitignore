@@ -112,3 +112,6 @@ assets/images/security/badrudi-exploit.mp4
 # Local Obsidian workspace cache
 .context/
 .obsidian/
+
+# Machine-specific install state (regenerable via scripts/install-apply.js)
+.agents/ecc-install-state.json

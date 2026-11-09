@@ -1,5 +1,5 @@
 ---
-description: Load the most recent session file from E:/antigravity-kit/memory-vault/sessions/ and resume work with full context from where the last session ended.
+description: Load the most recent session file from the memory vault sessions store and resume work with full context from where the last session ended.
 ---
 
 # Resume Session Command
@@ -17,9 +17,9 @@ This command is the counterpart to `/save-session`.
 ## Usage
 
 ```
-/resume-session                                                      # loads most recent file in E:/antigravity-kit/memory-vault/sessions/
+/resume-session                                                      # loads most recent file in the sessions store
 /resume-session 2024-01-15                                           # loads most recent session for that date
-/resume-session E:/antigravity-kit/memory-vault/sessions/2024-01-15-abc123de-session.tmp  # loads a current short-id session file
+/resume-session .agents/memory-vault/sessions/2024-01-15-abc123de-session.tmp  # loads a current short-id session file
 ```
 
 ## Process
@@ -28,19 +28,19 @@ This command is the counterpart to `/save-session`.
 
 If no argument provided:
 
-1. Check `E:/antigravity-kit/memory-vault/sessions/`
+1. Locate the sessions store: `AGY_MEMORY_VAULT/sessions/` when the env var is set, otherwise `.agents/memory-vault/sessions/` (workspace-relative)
 2. Read the matching `*-session.tmp` candidates and apply the candidate ranking below
 3. Load the highest-ranked candidate
 4. If the folder does not exist or has no eligible matching files, tell the user:
    ```
-   No session files found in E:/antigravity-kit/memory-vault/sessions/
+   No session files found in the sessions store (AGY_MEMORY_VAULT/sessions/ or .agents/memory-vault/sessions/)
    Run /save-session at the end of a session to create one.
    ```
    Then stop.
 
 If an argument is provided:
 
-- If it looks like a date (`YYYY-MM-DD`), search `E:/antigravity-kit/memory-vault/sessions/` for files matching `YYYY-MM-DD-session.tmp` (legacy format) or
+- If it looks like a date (`YYYY-MM-DD`), search the sessions store (`AGY_MEMORY_VAULT/sessions/` or `.agents/memory-vault/sessions/`) for files matching `YYYY-MM-DD-session.tmp` (legacy format) or
   `YYYY-MM-DD-<shortid>-session.tmp` (current format), apply the candidate ranking below across
   all matches, and load the highest-ranked candidate for that date
 - If it looks like a file path, read exactly that file directly. Do not apply candidate ranking or
@@ -138,7 +138,7 @@ empty or unreadable without loading a substitute.
 ## Example Output
 
 ```
-SESSION LOADED: E:/antigravity-kit/memory-vault/sessions/2024-01-15-abc123de-session.tmp
+SESSION LOADED: .agents/memory-vault/sessions/2024-01-15-abc123de-session.tmp
 ════════════════════════════════════════════════
 
 PROJECT: my-app — JWT Authentication

@@ -3,6 +3,10 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
+// Legacy fallbacks for the original author's machine (E: drive). Environment
+// variables (AGY_PRELOADED_ROOT / AGY_CATALOG_ROOT) and repo-relative
+// resolution below always take precedence; in a normal clone these paths are
+// never reached.
 const FALLBACK_PRELOADED_ROOT = 'E:\\antigravity-kit\\global-profile\\.agents';
 const FALLBACK_CATALOG_ROOT = 'E:\\antigravity-kit\\secdevops-antigravity';
 

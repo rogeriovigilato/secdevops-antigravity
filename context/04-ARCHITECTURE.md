@@ -1,19 +1,18 @@
 # 04 - Directory & Architecture Map
 
 ```text
-E:\antigravity-kit\
-├── secdevops-antigravity\      # Clean GitHub repository & full on-demand catalog
-│   ├── context\               # Local-only state (git-ignored)
-│   ├── agents\                 # 30 agent definitions
-│   ├── commands\               # 86 workflow definitions
-│   ├── contexts\               # 4 posture modes (dev, review, research, secops)
-│   ├── rules\                  # 4 rule packs (common, python, typescript, golang)
-│   ├── skills\                 # 82 skill folders (<name>/SKILL.md)
-│   ├── scripts\                # Installer, doctor, repair, uninstall, memory CLI/MCP
-│   └── manifests\              # Installer module & profile manifests
-├── global-profile\
-│   └── .agents\                # Preloaded low-token profile (15 skills, 11 agents, 7 workflows incl. /monitor, rules)
-├── token-monitor\              # Official Antigravity Galaxy Mind & Token Radar (127.0.0.1:4317)
-├── memory-vault\               # Persistent Markdown memory vault (project/, user/, sessions/)
-└── .home\                      # Redirected HOME for installer SQLite state
+secdevops-antigravity/            # Repository root (any clone location)
+├── .agents/                      # Preloaded low-token profile (15 skills, 11 agents, 7 workflows incl. /monitor, 20 rule files)
+├── context/                      # Governance ledger (versioned, Obsidian Graph compatible)
+├── agents/                       # 30 agent definitions
+├── commands/                     # 87 workflow definitions
+├── contexts/                     # 4 posture modes (dev, review, research, secops)
+├── rules/                        # 4 rule packs (common, python, typescript, golang)
+├── skills/                       # 82 skill folders (<name>/SKILL.md)
+├── scripts/                      # Installer, doctor, repair, uninstall, memory CLI/MCP (vendored ECC runtime)
+├── manifests/                    # Installer module & profile manifests
+├── docs/                         # Guides, assets, and UPSTREAM.md
+└── token-monitor/                # Galaxy Mind & Token Radar (127.0.0.1:4317)
 ```
+
+> **Author's local environment (legacy, not required):** `E:\antigravity-kit\` also contains `global-profile\.agents` (active global profile), `memory-vault` (session store), and `.home` (redirected installer home). All tooling resolves paths relative to the repository root, with optional `AGY_*` environment overrides; no absolute path is required.

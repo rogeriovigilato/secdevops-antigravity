@@ -1,5 +1,5 @@
 ---
-description: Save current session state to a dated file in E:/antigravity-kit/memory-vault/sessions/ so work can be resumed in a future session with full context.
+description: Save current session state to a dated file in the memory vault sessions store so work can be resumed in a future session with full context.
 ---
 
 # Save Session Command
@@ -26,15 +26,15 @@ Before writing the file, collect:
 
 ### Step 2: Create the sessions folder if it doesn't exist
 
-Create the canonical sessions folder in the Memory Vault directory:
+Create the canonical sessions folder in the Memory Vault directory (`AGY_MEMORY_VAULT` when set, otherwise `.agents/memory-vault` at the workspace root):
 
 ```bash
-mkdir -p E:/antigravity-kit/memory-vault/sessions
+mkdir -p .agents/memory-vault/sessions   # or "$AGY_MEMORY_VAULT/sessions" when the env var is set
 ```
 
 ### Step 3: Write the session file
 
-Create `E:/antigravity-kit/memory-vault/sessions/YYYY-MM-DD-<short-id>-session.tmp`, using today's actual date and a short-id that satisfies the rules enforced by `SESSION_FILENAME_REGEX` in `session-manager.js`:
+Create `AGY_MEMORY_VAULT/sessions/YYYY-MM-DD-<short-id>-session.tmp` (default: `.agents/memory-vault/sessions/YYYY-MM-DD-<short-id>-session.tmp`), using today's actual date and a short-id that satisfies the rules enforced by `SESSION_FILENAME_REGEX` in `session-manager.js`:
 
 - Compatibility characters: letters `a-z` / `A-Z`, digits `0-9`, hyphens `-`, underscores `_`
 - Compatibility minimum length: 1 character
@@ -271,5 +271,5 @@ Then test with Postman — the response should include a `Set-Cookie` header.
 - The "What Did NOT Work" section is the most critical — future sessions will blindly retry failed approaches without it
 - If the user asks to save mid-session (not just at the end), save what's known so far and mark in-progress items clearly
 - The file is meant to be read by the agent at the start of the next session via `/resume-session`
-- Use the canonical global session store: `E:/antigravity-kit/memory-vault/sessions/`
+- Use the canonical session store: `AGY_MEMORY_VAULT/sessions/` or `.agents/memory-vault/sessions/` (workspace-relative)
 - Prefer the short-id filename form (`YYYY-MM-DD-<short-id>-session.tmp`) for any new session file
