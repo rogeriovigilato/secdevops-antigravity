@@ -14,6 +14,8 @@
 
 **SecDevOps Antigravity** is a full-stack Software Engineering, Security (SecOps/OSINT), Networking/Homelab, System Architecture, TDD, and Context Governance ecosystem built natively for **Google Antigravity (AGY)**.
 
+> **Simplest way to use it:** clone this repository and open the folder in **Google Antigravity**. No `npm install`, installer, or extra setup is needed — the curated `.agents/` profile is already at the root.
+
 Instead of injecting all 82 skills and 30 subagents into the system prompt on every turn (which wastes thousands of tokens per message), this repository implements a **4-Ring Orbital Architecture (2 Tiers)** powered by **Mandatory Step #1 Auto-Triggers**:
 
 | Orbital Ring | Tier | Count | How It Works |
@@ -147,7 +149,7 @@ secdevops-antigravity/
 
 > **Requirements:** Google Antigravity 2.0. **Node.js >= 18 is required only for `/monitor`** (the local token monitor server) and for the optional diagnostic/installer scripts. The preloaded skills, rules, agents, and workflows work without Node.
 
-1. **Zero-Config Workspace Usage (no `npm install` needed):**
+1. **Option A — Clone and open (recommended, no `npm install` needed):**
    Clone this repository and open it in **Google Antigravity**. Because `.agents/` is pre-configured at the root, all **15 preloaded skills**, **11 agents**, **7 workflows (`/monitor`)**, **20 rules**, and the **on-demand router for all 67 specialist skills** are active out of the box!
 2. **Health Diagnostics (`doctor.js`):**
    ```bash
@@ -157,7 +159,7 @@ secdevops-antigravity/
    ```bash
    node --test token-monitor/test/*.test.js
    ```
-4. **Optional — installer/diagnostics tooling:**
+4. **Option B — Optional installer/diagnostics tooling:**
    Using the kit does **not** require `npm install`. `doctor.js` and the token-monitor test suite run **without** external dependencies. The installer (`scripts/install-apply.js`) is only for advanced/manual installation into other targets and imports `js-yaml`/`ajv`; if you intend to run it, install dependencies first:
    ```bash
    npm install
