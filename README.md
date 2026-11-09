@@ -130,7 +130,7 @@ Architectural decisions, verified state, and roadmaps are maintained in `context
 ```text
 secdevops-antigravity/
 ├── .agents/                  # Preloaded 2-Tier Profile (15 skills, 11 agents, 7 workflows incl. /monitor, 20 rules)
-├── token-monitor/            # Official Galaxy Mind & Token Radar (127.0.0.1:4317 + 24 automated unit/UI/security tests)
+├── token-monitor/            # Official Galaxy Mind & Token Radar (127.0.0.1:4317 + 24 tests; requires Node.js >= 18)
 ├── context/                  # Architectural Context Ledger compatible with Obsidian Graph View
 ├── agents/                   # Full catalog of 30 specialized subagent definitions
 ├── skills/                   # Full catalog of 82 skills (SecDevOps, Homelab, Cloud, Backend, OSINT, TDD)
@@ -145,22 +145,24 @@ secdevops-antigravity/
 
 ## 🛠️ Quick Start
 
-1. **Zero-Config Workspace Usage:**
+> **Requirements:** Google Antigravity 2.0. **Node.js >= 18 is required only for `/monitor`** (the local token monitor server) and for the optional diagnostic/installer scripts. The preloaded skills, rules, agents, and workflows work without Node.
+
+1. **Zero-Config Workspace Usage (no `npm install` needed):**
    Clone this repository and open it in **Google Antigravity**. Because `.agents/` is pre-configured at the root, all **15 preloaded skills**, **11 agents**, **7 workflows (`/monitor`)**, **20 rules**, and the **on-demand router for all 67 specialist skills** are active out of the box!
 2. **Health Diagnostics (`doctor.js`):**
    ```bash
    node scripts/doctor.js --target antigravity
    ```
-3. **Run the Token Monitor Test Suite:**
+3. **Run the Token Monitor Test Suite (requires Node.js >= 18):**
    ```bash
    node --test token-monitor/test/*.test.js
    ```
-4. **Bootstrap dependencies (installer only):**
-   `doctor.js` and the token-monitor test suite run **without** external dependencies. The installer (`scripts/install-apply.js`) imports `js-yaml`/`ajv`, so on a fresh clone run `npm install` first — or use `install.ps1`/`install.sh`, which install dependencies automatically. Requires Node >= 18.
+4. **Optional — installer/diagnostics tooling:**
+   Using the kit does **not** require `npm install`. `doctor.js` and the token-monitor test suite run **without** external dependencies. The installer (`scripts/install-apply.js`) is only for advanced/manual installation into other targets and imports `js-yaml`/`ajv`; if you intend to run it, install dependencies first:
    ```bash
    npm install
    ```
-   No pre-defined absolute path is required: all tooling resolves relative to the repository root, with optional overrides via `AGY_PRELOADED_ROOT`, `AGY_CATALOG_ROOT`, `AGY_MONITOR_PORT`, `AGY_MONITOR_DIR`, `AGY_MEMORY_VAULT`, and `AGY_NODE_BIN`.
+   The installer is **not** part of the normal Antigravity workflow: this repository already ships the curated `.agents/` profile. No pre-defined absolute path is required: all tooling resolves relative to the repository root, with optional overrides via `AGY_PRELOADED_ROOT`, `AGY_CATALOG_ROOT`, `AGY_MONITOR_PORT`, `AGY_MONITOR_DIR`, `AGY_MEMORY_VAULT`, and `AGY_NODE_BIN`.
 
 ---
 

@@ -10,7 +10,6 @@
                 "secdevops-install":  "scripts/install-apply.js"
             },
     "scripts":  {
-                    "install:antigravity":  "node scripts/install-apply.js --target antigravity --no-hooks",
                     "doctor:antigravity":  "node scripts/doctor.js --target antigravity"
                 },
     "dependencies":  {

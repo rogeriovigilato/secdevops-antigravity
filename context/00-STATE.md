@@ -3,7 +3,7 @@
 - **Golden Rule:** Always review every modification, verify dependencies before editing or deleting, and run the automated test suite and code review before marking work complete. All tooling resolves paths relative to the repository root, with optional `AGY_*` environment overrides.
 - **Repository Root:** any clone location. No absolute path is required to use this project (e.g. `E:\antigravity-kit\secdevops-antigravity` on the author's machine).
 - **Memory Vault (Markdown / Obsidian-compatible):** `.agents/memory-vault` by default, or `AGY_MEMORY_VAULT` when set.
-- **Node.js:** >= 18. When `node` is not in `PATH`, point `AGY_NODE_BIN` at the binary.
+- **Node.js:** >= 18 — required only for `/monitor` (the local token monitor server) and optional diagnostic/installer scripts; the preloaded skills, rules, agents, and workflows work without Node. When `node` is not in `PATH`, point `AGY_NODE_BIN` at the binary.
 
 ## Completed & Verified Components
 1. **Two-Tier Low-Token Architecture + Mandatory Auto-Triggers:**

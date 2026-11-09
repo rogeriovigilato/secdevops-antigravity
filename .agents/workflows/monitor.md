@@ -6,6 +6,8 @@ description: Start, open, or check the Antigravity Galaxy Mind & Token Radar (/m
 
 Launch or inspect the **Antigravity Galaxy Mind & Token Radar** on `http://127.0.0.1:4317` without manually opening folders or executables.
 
+**Requirements:** Node.js >= 18. The monitor runs a local HTTP server on `127.0.0.1:4317`; if `node` is not in `PATH`, set `AGY_NODE_BIN` to the binary.
+
 ## Usage
 
 ```text
