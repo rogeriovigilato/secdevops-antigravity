@@ -1,0 +1,18 @@
+{
+  "date": "2026-11-08",
+  "task": "Crie uma configuração segura de switch Cisco IOS para segmentar 2 VLANs: VLAN 10 (Servidores, 10.10.10.0/24) e VLAN 20 (Visitantes, 10.10.20.0/24, isolada da VLAN 10 via ACL), com DHCP snooping e port-security. Leia apenas homelab-vlan-segmentation e cisco-ios-patterns; não crie arquivos no disco.",
+  "scenarios": {
+    "A": {
+      "label": "Monolithic — full catalog preloaded",
+      "runs": ["5363df44", "2892b0ae", "90c67441"]
+    },
+    "B": {
+      "label": "2-Tier — curated preloaded profile",
+      "runs": ["f6018ce4", "c5f3e20f", "cddd7aad"]
+    },
+    "A_single_step": {
+      "label": "Monolithic — single-step answer",
+      "runs": ["c101b2fb", "25abaf2b"]
+    }
+  }
+}

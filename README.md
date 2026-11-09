@@ -41,17 +41,17 @@ Thanks to **Section 4 (`Mandatory Auto-Triggers & Delivery Gate`)** in `.agents/
 
 ## 📊 Empirical Token Benchmark (100% Live-Measured in `transcript.jsonl`)
 
-Instead of relying on theoretical estimates or composite sums, we ran **controlled multi-run ($N = 3$) end-to-end benchmarks** directly inside Google Antigravity, comparing **Scenario A (Monolithic — all 82 skills, 30 subagents, and 19 rules injected into the active prompt)** against **Scenario B (Our 2-Tier Orbital Architecture — 15 preloaded skills, 11 core agents, `trigger: glob` language rules, and `common-secdevops-router.md`)** and reading the exact token counters recorded by the runtime in `.system_generated/logs/transcript.jsonl`.
+Instead of relying on theoretical estimates or composite sums, we ran **controlled multi-run ($N = 3$) end-to-end benchmarks** directly inside Google Antigravity, comparing **Scenario A (Monolithic — all 82 skills, 30 subagents, and the 19 curated rules injected into the active prompt)** against **Scenario B (Our 2-Tier Orbital Architecture — 15 preloaded skills, 11 core agents, `trigger: glob` language rules, and `common-secdevops-router.md`)** and reading the exact token counters recorded by the runtime in `.system_generated/logs/transcript.jsonl`.
 
-> **Reproducibility note:** these measurements were captured from local Antigravity runtime transcripts (`.system_generated/logs/transcript.jsonl`), which are **not distributed with this repository**. The run IDs document provenance, but third parties must collect their own transcripts to reproduce the numbers.
+> **Methodology (2026-11-08):** token counts are exact runtime counters, not estimates. The multi-step scenarios were run 3× each; the single-step monolithic comparison was run 2×. One Scenario A run started with a warm prompt cache, so the cold uncached mean for Scenario A uses the two cold-start runs and the warm run is shown separately. The `11,082`-token base prompt is a separately measured constant in the same environment; all other values come from the transcripts. Raw transcripts are **not distributed**; `benchmarks/extract-metrics.js` recalculates every number below from a local Antigravity brain directory, and `benchmarks/disk-footprint.js` reproduces the disk numbers.
 
 ### 1. Per-Turn System Prompt Overhead (Live-Measured Step #1 Breakdown)
 
 | Injected Layer per Turn | 🔴 Scenario A (Monolithic Measured) | 🟢 Scenario B (2-Tier Measured) | 💰 Exact Measured Savings |
 | :--- | :---: | :---: | :---: |
-| **1. Antigravity Base Prompt** *(Native IDE + Tools + Task)* | `11,082 tokens` | `11,082 tokens` | *Fixed IDE & prompt baseline* |
+| **1. Antigravity Base Prompt** *(Native IDE + Tools + Task; measured separately)* | `11,082 tokens` | `11,082 tokens` | *Fixed IDE & prompt baseline* |
 | **2. Active Customization Payload** *(82 Skills + 30 Agents + Rules)* | **`12,061 tokens/turn`** | **`3,931 tokens/turn`** | **`-8,130 tokens/turn` (`-67.4%`)** |
-| **📈 Total Step #1 Prompt Tokens (`input_tokens`)** | **`23,143 tokens`** *(mean, $N=3$)* | **`15,013 tokens`** *(mean, $N=3$)* | **`-8,130 tokens/call` (`-35.1%`)** |
+| **📈 Total Step #1 Prompt Tokens (`input_tokens + cache_read_tokens`)** | **`23,143 tokens`** *(mean, $N=3$)* | **`15,013 tokens`** *(mean, $N=3$)* | **`-8,130 tokens/call` (`-35.1%`)** |
 
 ### 2. End-to-End Completed Task Benchmark ($N = 3$ Multi-Step Runs per Scenario)
 
@@ -66,17 +66,19 @@ To measure the **real budget per completed task** (including the cost of `read_f
 | 🔴 **Scenario A — Run 1 (`5363df44`)** | `23,145` | `30,090` *(+6,944 skill fetch)* | `53,235` | `30,089` | `1,918` |
 | 🔴 **Scenario A — Run 2 (`2892b0ae`)** | `23,141` | `30,161` *(+7,019 skill fetch)* | `53,302` | `30,160` | `2,740` |
 | 🔴 **Scenario A — Run 3 (`90c67441`)** | `23,143` | `30,152` *(+7,009 skill fetch)* | `53,295` | `11,113` *(warm cache)* | `2,907` |
-| **🔴 Scenario A Mean ($N = 3$)** | **`23,143 tokens`** | **`30,134 tokens`** | **`53,277 tokens`** | **`30,125 tokens` *(cold)*** | **`2,522 tokens`** |
+| **🔴 Scenario A Mean ($N = 3$; cold new-input $N = 2$)** | **`23,143 tokens`** | **`30,134 tokens`** | **`53,277 tokens`** | **`30,125 tokens` *(cold-start runs)*** | **`2,522 tokens`** |
 | **💰 Exact Multi-Step Task Savings (B vs. A)** | **`-8,130` (`-35.1%`)** | **`-8,077` (`-26.8%`)** | **`-16,206 tokens` (`-30.4%`)** | **`-8,069 tokens` (`-26.8%`)** | — |
 
-### 3. Single-Step Monolithic ($N = 3$) vs. Multi-Step On-Demand Trade-off
+> **Cold-cache note:** Scenario A Run 3 (`90c67441`) started warm (`input_tokens = 2,052`, `cache_read_tokens = 21,091`), so its `11,113` new-input value is shown for transparency but excluded from the cold uncached mean. The Step #1, Step #2, cumulative prompt, and output means use all three runs.
+
+### 3. Single-Step Monolithic ($N = 2$) vs. Multi-Step On-Demand Trade-off
 
 What if Scenario A answers in **1 single step** without calling `read_file` (`c101b2fb`: `23,125 tokens`, `25abaf2b`: `23,124 tokens`, mean **`23,125 tokens`**), while Scenario B spends **2 steps** to fetch the 2 domain skills via `read_file`?
 - **Cold Uncached `input_tokens` Billed:** Scenario B (`2 steps`, **`22,056 new input_tokens`**) still bills **`1,069 fewer new input_tokens` (`-4.6%`)** than a 1-step Monolithic call (**`23,125 new input_tokens`**), because Step #2 in Scenario B hits the Gemini prompt cache (`15,014 cache_read_tokens`, `68%` cache hit) and only bills `+7,043` new tokens for the two `SKILL.md` files!
-- **Multi-Turn Scaling:** From Turn 2 onward, every additional step (testing, `code-reviewer`, git workflow) saves **`8,130 prompt tokens` per turn** in Scenario B (`~243,900 tokens` saved over a 30-turn engineering session).
+- **Multi-Turn Scaling:** Across a 30-turn session, the **`8,130 prompt tokens` per turn** saved by Scenario B compound to **`~243,900 tokens`** (`30 × 8,130`).
 
 > **Key Engineering Takeaways:**
-> - **Preloaded vs. Catalog Disk Payload:** Preloaded `.agents/` drops from **`1,365 KB` (`82 skills / 30 agents`)** down to **`262 KB` (`-80.8%` disk footprint)**.
+> - **Preloaded vs. Catalog Disk Payload:** Like-for-like, the preloaded profile is far smaller. Comparing definition files only (`SKILL.md` + agents + rules + workflows), the catalog is **`991 KB`** vs **`270 KB`** preloaded — **`-72.8%`**. Comparing every file under each tree (including references, scripts, and READMEs), **`1,377 KB`** vs **`515 KB`** — **`-62.6%`**. The often-quoted `-80.4%` (`1,377 KB → 270 KB`) mixes the full catalog with preloaded definition files only, so it is reported but not used as the headline. `benchmarks/disk-footprint.js` prints all three comparisons so the file sets stay explicit.
 > - **Zero-Cost Workflows:** Custom slash workflows in `.agents/workflows/` (`0 tokens/turn`) stay dormant on disk until explicitly invoked via `/monitor` or `/command`.
 > - **Surgical On-Demand Loading:** Fetching 2 specialist skills via `read_file` adds **`~7,043 tokens` once**, which is still smaller than the **`8,130 tokens/turn`** tax of keeping all 82 skills and 30 agents permanently in the system prompt.
 
@@ -131,7 +133,7 @@ Architectural decisions, verified state, and roadmaps are maintained in `context
 
 ```text
 secdevops-antigravity/
-├── .agents/                  # Preloaded 2-Tier Profile (15 skills, 11 agents, 7 workflows incl. /monitor, 20 rules)
+├── .agents/                  # Preloaded 2-Tier Profile (15 skills, 11 agents, 7 workflows incl. /monitor, 19 rules + catalog README)
 ├── token-monitor/            # Official Galaxy Mind & Token Radar (127.0.0.1:4317 + 24 tests; requires Node.js >= 18)
 ├── context/                  # Architectural Context Ledger compatible with Obsidian Graph View
 ├── agents/                   # Full catalog of 30 specialized subagent definitions
@@ -140,6 +142,7 @@ secdevops-antigravity/
 ├── contexts/                 # 4 operational posture modes (dev.md, review.md, research.md, secops.md)
 ├── rules/                    # Modular rule packs (common, python, typescript, golang)
 ├── scripts/                  # Multi-target installer, doctor.js, repair.js, and memory utilities
+├── benchmarks/               # Reproducible token benchmark (transcript parser + disk footprint)
 └── manifests/                # Installer module and profile manifests
 ```
 
@@ -150,11 +153,12 @@ secdevops-antigravity/
 > **Requirements:** Google Antigravity 2.0. **Node.js >= 18 is required only for `/monitor`** (the local token monitor server) and for the optional diagnostic/installer scripts. The preloaded skills, rules, agents, and workflows work without Node.
 
 1. **Option A — Clone and open (recommended, no `npm install` needed):**
-   Clone this repository and open it in **Google Antigravity**. Because `.agents/` is pre-configured at the root, all **15 preloaded skills**, **11 agents**, **7 workflows (`/monitor`)**, **20 rules**, and the **on-demand router for all 67 specialist skills** are active out of the box!
+   Clone this repository and open it in **Google Antigravity**. Because `.agents/` is pre-configured at the root, all **15 preloaded skills**, **11 agents**, **7 workflows (`/monitor`)**, **19 preloaded rules**, and the **on-demand router for all 67 specialist skills** are active out of the box!
 2. **Health Diagnostics (`doctor.js`):**
    ```bash
    node scripts/doctor.js --target antigravity
    ```
+   On a fresh source clone this is expected: `doctor` exits 0 with `No ECC install-state files found` because the repository is the source, not an installed target.
 3. **Run the Token Monitor Test Suite (requires Node.js >= 18):**
    ```bash
    node --test token-monitor/test/*.test.js

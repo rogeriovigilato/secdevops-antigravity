@@ -11,10 +11,13 @@
    - **Tier 2 — On-Demand Catalog at Root (`skills/`, `agents/`, `commands/`, `contexts/`):** 82 total skills, 30 total agents, 87 commands, and 4 operational context modes (`dev.md`, `review.md`, `research.md`, `secops.md`). Automatically loaded via `read_file` on Step #1 whenever a prompt touches a matching domain.
 2. **Official Antigravity Galaxy Mind & Token Radar (`token-monitor/`):**
    - Local HTTP + SSE telemetry server (`http://127.0.0.1:4317`) with 4 concentric orbital rings (11+15 preloaded and 19+67 on-demand), parallel multi-skill beam highlighting, smart session selector (`Main Chat` / `Subagent`) + `🔄 Refresh Chats` button, sliding 6-step token delta chart, `EN` / `PT-BR` i18n switcher, and `Document Picture-in-Picture` Corner HUD.
-   - Validated with **24/24 automated tests passing**. The historical `84.58%` line coverage refers to the earlier 15-test suite; coverage of the current 24-test suite has not been re-measured.
+   - Validated with **24/24 automated tests passing**. Measured coverage: **84.82% lines, 72.57% branches, 84.62% functions**.
 3. **Repository Cleanup & Decoupling:**
    - Removed unused third-party harness directories and unreferenced legacy scripts.
    - Preserved valid MIT `LICENSE`.
+4. **Reproducible Token Benchmark Harness (`benchmarks/`):**
+   - `extract-metrics.js` reads Antigravity `transcript.jsonl` counters and emits per-run plus aggregate metrics; `disk-footprint.js` computes catalog vs. preloaded KB with explicit file-set definitions.
+   - 2026-11-08 baseline: Step #1 `23,143 → 15,013` tokens (`-35.1%`), Step #2 `30,134 → 22,057` (`-26.8%`), cumulative `53,277 → 37,071` (`-30.4%`); cold new-input `30,125` (N=2) vs. `22,056` (N=3). Raw transcripts are not committed.
 
 ## Local Environment (author's machine — legacy, not required)
 

@@ -2,7 +2,7 @@
 
 ```text
 secdevops-antigravity/            # Repository root (any clone location)
-├── .agents/                      # Preloaded low-token profile (15 skills, 11 agents, 7 workflows incl. /monitor, 20 rule files)
+├── .agents/                      # Preloaded low-token profile (15 skills, 11 agents, 7 workflows incl. /monitor, 19 rules + catalog README)
 ├── context/                      # Governance ledger (versioned, Obsidian Graph compatible)
 ├── agents/                       # 30 agent definitions
 ├── commands/                     # 87 workflow definitions
@@ -10,6 +10,7 @@ secdevops-antigravity/            # Repository root (any clone location)
 ├── rules/                        # 4 rule packs (common, python, typescript, golang)
 ├── skills/                       # 82 skill folders (<name>/SKILL.md)
 ├── scripts/                      # Installer, doctor, repair, uninstall, memory CLI/MCP (vendored ECC runtime)
+├── benchmarks/                   # Reproducible token benchmark (transcript parser + disk footprint)
 ├── manifests/                    # Installer module & profile manifests
 ├── docs/                         # Guides, assets, and UPSTREAM.md
 └── token-monitor/                # Galaxy Mind & Token Radar (127.0.0.1:4317)

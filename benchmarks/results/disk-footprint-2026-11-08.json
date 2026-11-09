@@ -1,0 +1,45 @@
+{
+  "generatedAt": "2026-11-09T23:05:05.651Z",
+  "definitions": {
+    "catalogAll": "Every file under skills/, agents/, and rules/ (recursive).",
+    "catalogMain": "skills/*/SKILL.md + agents/*.md + rules/**/*.md excluding rules/README.md.",
+    "preloadedMain": ".agents/skills/*/SKILL.md + .agents/agents/*.md + .agents/rules/*.md excluding .agents/rules/README.md + .agents/workflows/*.md.",
+    "preloadedAll": "Every file under .agents/ (recursive), including references and READMEs."
+  },
+  "sizes": {
+    "catalogAll": {
+      "bytes": 1409875,
+      "kb": 1376.8,
+      "files": 170
+    },
+    "catalogMain": {
+      "bytes": 1015196,
+      "kb": 991.4,
+      "files": 135
+    },
+    "preloadedMain": {
+      "bytes": 276362,
+      "kb": 269.9,
+      "files": 52
+    },
+    "preloadedAll": {
+      "bytes": 527111,
+      "kb": 514.8,
+      "files": 65
+    }
+  },
+  "comparisons": {
+    "catalogAllVsPreloadedMain": {
+      "reductionPct": 80.4,
+      "ratioPct": 19.6
+    },
+    "catalogMainVsPreloadedMain": {
+      "reductionPct": 72.8,
+      "ratioPct": 27.2
+    },
+    "catalogAllVsPreloadedAll": {
+      "reductionPct": 62.6,
+      "ratioPct": 37.4
+    }
+  }
+}
